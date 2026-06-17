@@ -3,23 +3,23 @@ import pandas as pd
 import plotly.graph_objects as go
 
 # =====================================================================
-# 1. APPLICATION ARCHITECTURE & UI TEMPLATE CONFIGURATION
+# 1. ARCHITECTURE & HIGH-FIDELITY GRADIENT THEME ENGINE
 # =====================================================================
 st.set_page_config(
-    page_title="Personal Finance - Allocation Suite",
-    page_icon="📊",
+    page_title="Money T - Dashboard Plan",
+    page_icon="💰",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-def inject_personal_finance_theme():
-    """Injects high-fidelity stylesheets matching the white-purple gradient layout."""
+def inject_moneyt_high_fidelity_theme():
     st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&display=swap');
         
+        /* Main Canvas Layout Base */
         .stApp {
-            background: linear-gradient(135deg, #F3F4F6 0%, #EEEFFF 100%) !important;
+            background: linear-gradient(135deg, #F8FAFC 0%, #EEF2F6 100%) !important;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
         
@@ -27,67 +27,50 @@ def inject_personal_finance_theme():
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
         
-        /* --- SIDEBAR WORKSPACE CONTROLS --- */
+        /* --- SIDEBAR WORKSPACE BRANDING & ITEMS --- */
         [data-testid="stSidebar"] {
             background-color: #FFFFFF !important;
             border-right: 1px solid #E2E8F0;
             padding-top: 1.5rem !important;
         }
         
+        .sidebar-brand-container {
+            padding: 0 1rem 1.5rem 1rem;
+        }
+        
         .sidebar-nav-item {
             display: flex;
             align-items: center;
-            padding: 0.85rem 1.2rem;
-            border-radius: 14px;
-            margin-bottom: 0.4rem;
-            color: #718096;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.3rem;
+            color: #64748B;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .sidebar-nav-item:hover {
+            background-color: #F8FAFC;
+            color: #475569;
         }
         .sidebar-nav-item.active {
-            background: linear-gradient(90deg, #8B5CF6 0%, #6366F1 100%);
+            background: linear-gradient(90deg, #6366F1 0%, #A855F7 100%);
             color: #FFFFFF !important;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
         }
         
-        /* --- HORIZONTAL MONTH SELECTOR HEADER BANNER --- */
-        .month-banner-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #FFFFFF;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            border: 1px solid #E2E8F0;
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
-        }
-        .month-pill {
-            padding: 0.4rem 0.85rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #A0AEC0;
-            text-transform: uppercase;
-            border-radius: 20px;
-            letter-spacing: 0.05em;
-        }
-        .month-pill.active {
-            background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);
-            color: #FFFFFF;
-            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
-        }
-
         /* --- DYNAMIC WHITE CARD SURFACES --- */
         .finance-card {
             background-color: #FFFFFF;
             padding: 1.5rem;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid #E2E8F0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
-            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            margin-bottom: 1.25rem;
         }
         
-        /* --- PLANNED DIRECTIVE TABLE SYSTEMS --- */
+        /* --- STRATEGIC ALLOCATION DATAGRID TABLE --- */
         .custom-table {
             width: 100%;
             border-collapse: collapse;
@@ -95,284 +78,261 @@ def inject_personal_finance_theme():
         }
         .custom-table th {
             text-align: left;
-            padding: 0.85rem 1rem;
-            color: #A0AEC0;
+            padding: 0.75rem 1rem;
+            color: #FFFFFF;
             font-weight: 600;
             font-size: 0.8rem;
-            border-bottom: 1px solid #EDF2F7;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         .custom-table td {
-            padding: 1.1rem 1rem;
-            color: #2D3748;
-            font-size: 0.88rem;
-            border-bottom: 1px solid #EDF2F7;
-        }
-        .pill-medium {
-            padding: 0.3rem 0.75rem;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            padding: 0.9rem 1rem;
+            color: #334155;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #E2E8F0;
         }
         
         #MainMenu, footer { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
 
-inject_personal_finance_theme()
+inject_moneyt_high_fidelity_theme()
 
 # =====================================================================
-# 2. RUNTIME INTERNAL STORAGE SYSTEM
+# 2. STATE PERSISTENCE SYSTEM (MONTHLY RELATIONAL MAPPING)
 # =====================================================================
-if 'user_expenses' not in st.session_state:
-    st.session_state['user_expenses'] = []
+months_list = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+if 'active_month' not in st.session_state:
+    st.session_state['active_month'] = "April"
+
+if 'monthly_db' not in st.session_state:
+    st.session_state['monthly_db'] = {m: [] for m in months_list}
+
+# Seed realistic reference data if fresh session
+if not any(st.session_state['monthly_db'].values()):
+    st.session_state['monthly_db']["April"] = [
+        {"Merchant": "Corporate Rent Office", "Category": "Essential Needs", "Amount": 32000.0},
+        {"Merchant": "Whole Foods Market", "Category": "Essential Needs", "Amount": 4800.0},
+        {"Merchant": "Downtown Premium Dining Out", "Category": "Personal Lifestyle & Wants", "Amount": 8500.0},
+        {"Merchant": "Vanguard Index Fund Pool", "Category": "Future Savings & Investments", "Amount": 12800.0}
+    ]
 
 # =====================================================================
-# 3. SIDEBAR NAVIGATION & TRANSACTION CONTROL PANEL
+# 3. SIDEBAR NAVIGATION CONTROLS
 # =====================================================================
 with st.sidebar:
-    st.markdown("<h2 style='font-weight:800; color:#2D3748; margin-left:0.5rem;'>📊 PERSONAL</h2><p style='color:#718096; font-size:0.8rem; margin-top:-0.75rem; margin-left:0.5rem; font-weight:600; letter-spacing:0.05em;'>FINANCE ENGINE</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="sidebar-brand-container">
+        <h2 style='font-weight:800; color:#1E293B; margin:0; display:flex; align-items:center;'>
+            <span style='background: linear-gradient(135deg, #6366F1 0%, #A855F7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>💜 Money T</span>
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown('<div class="sidebar-nav-item active">🏠 Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item active">📋 Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">📊 Overview</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">📉 Income</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">🍔 Menu</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">💳 Payments</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">📂 Budget</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">⚙️ Settings</div>', unsafe_allow_html=True)
+    
     st.markdown("<br><hr style='border-color:#E2E8F0;'><br>", unsafe_allow_html=True)
     
-    # Transaction input fields inside the sidebar panel layout
-    st.markdown("<h4 style='font-weight:700; color:#2D3748; margin-bottom:1rem;'>✍️ Log Transaction</h4>", unsafe_allow_html=True)
-    entry_title = st.text_input("Merchant Name", placeholder="e.g., Landlord Corp, Target")
-    entry_category = st.selectbox("Category Target Pool", ["Essential Needs", "Personal Lifestyle & Wants", "Future Savings & Investments"])
-    entry_amount = st.number_input("Amount Charged", min_value=0.0, value=0.0, step=25.0)
-    add_btn = st.button("Log Expense entry", use_container_width=True)
+    # Clean workspace transaction additions
+    st.markdown(f"<h4 style='font-weight:700; color:#1E293B; margin-bottom:0.75rem;'>✍️ Log Outlay ({st.session_state['active_month']})</h4>", unsafe_allow_html=True)
+    entry_title = st.text_input("Merchant/Recipient", placeholder="e.g., Target, Electric Corp")
+    entry_category = st.selectbox("Strategic Allocation Category", ["Essential Needs", "Personal Lifestyle & Wants", "Future Savings & Investments"])
+    entry_amount = st.number_input("Amount Paid", min_value=0.0, value=0.0, step=100.0)
+    add_btn = st.button("Commit Outlay Trace", use_container_width=True)
 
     if add_btn and entry_title and entry_amount > 0:
-        st.session_state['user_expenses'].append({
+        st.session_state['monthly_db'][st.session_state['active_month']].append({
             "Merchant": entry_title,
             "Category": entry_category,
             "Amount": entry_amount
         })
-        st.toast(f"Logged entry for {entry_title}!", icon="✅")
+        st.toast(f"Logged {entry_title} inside {st.session_state['active_month']}!", icon="🚀")
 
 # =====================================================================
-# 4. TEMPLATE MONTH BANNER HORIZONTAL SELECTOR COMPONENT
+# 4. HEADER INTERACTION BANNER (CHANGEABLE MONTH TIMELINE)
 # =====================================================================
-st.markdown("""
-<div class="month-banner-container">
-    <div class="month-pill">January</div>
-    <div class="month-pill">February</div>
-    <div class="month-pill">March</div>
-    <div class="month-pill active">April</div>
-    <div class="month-pill">May</div>
-    <div class="month-pill">June</div>
-    <div class="month-pill">July</div>
-    <div class="month-pill">August</div>
-    <div class="month-pill">September</div>
-    <div class="month-pill">October</div>
-    <div class="month-pill">November</div>
-    <div class="month-pill">December</div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<h3 style='margin:0 0 0.5rem 0; font-weight:800; color:#1E293B;'>Money T - Dashboard Plan</h3>", unsafe_allow_html=True)
+
+# Generate month tabs layout
+month_cols = st.columns(12)
+for idx, m_name in enumerate(months_list):
+    with month_cols[idx]:
+        is_active = (m_name == st.session_state['active_month'])
+        # Use native button styled carefully to preserve the timeline aesthetic
+        btn_lbl = f"📍 {m_name}" if is_active else m_name
+        if st.button(btn_lbl, key=f"month_btn_{m_name}", use_container_width=True):
+            st.session_state['active_month'] = m_name
+            st.rerun()
+
+st.markdown("<div style='margin-bottom:1.25rem;'></div>", unsafe_allow_html=True)
 
 # =====================================================================
-# 5. INPUT PARAMETER ENGINE 
+# 5. INTEGRATED COMPACT CONTROLS & ALIGNMENT STRATEGY ENGINE
 # =====================================================================
 st.markdown("<div class='finance-card'>", unsafe_allow_html=True)
-st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>⚙️ Budget Parameter Configuration</h4>", unsafe_allow_html=True)
+st.markdown("<h5 style='margin:0 0 0.75rem 0; font-weight:700; color:#334155;'>Budget Parameter Configuration</h5>", unsafe_allow_html=True)
 
-config_col1, config_col2, config_col3 = st.columns([1.5, 1.5, 2])
+# 3 compact configurations side-by-side to eliminate white blocks
+config_col1, config_col2, config_col3 = st.columns([1.5, 2.0, 3.5])
 
 with config_col1:
-    currency_choice = st.selectbox(
-        "Reporting Currency Token",
-        options=["USD ($)", "EUR (€)", "GBP (£)", "JPY (¥)", "INR (₹)"]
-    )
-    symbols = {"USD ($)": "$", "EUR (€)": "€", "GBP (£)": "£", "JPY (¥)": "¥", "INR (₹)": "₹"}
+    currency_choice = st.selectbox("Currency Token", options=["USD ($)", "EUR (€)", "GBP (£)", "INR (₹)"])
+    symbols = {"USD ($)": "$", "EUR (€)": "€", "GBP (£)": "£", "INR (₹)": "₹"}
     curr_sym = symbols[currency_choice]
 
 with config_col2:
-    user_income = st.number_input(
-        f"Enter Real Monthly Net Income ({curr_sym}):", 
-        min_value=0.0, 
-        value=80000.0,
-        step=1000.0
-    )
+    user_income = st.number_input(f"Monthly Net Income ({curr_sym})", min_value=1.0, value=80000.0, step=1000.0)
 
 with config_col3:
     allocation_strategy = st.selectbox(
-        "Select Matrix Allocation Target Strategy",
+        "Matrix Strategy Target Split",
         options=[
-            "Balanced Strategy (50% Needs, 30% Wants, 20% Savings)",
-            "Aggressive Wealth Accumulation (40% Needs, 20% Wants, 40% Savings)",
+            "Balanced Target Rule (50% Needs, 30% Wants, 20% Savings)",
+            "Aggressive Growth Rule (40% Needs, 20% Wants, 40% Savings)",
             "Conservative Baseline Rule (60% Needs, 20% Wants, 20% Savings)"
         ]
     )
 
-if "Balanced Strategy" in allocation_strategy:
+# Establish strict breakdown parameters
+if "Balanced" in allocation_strategy:
     p_needs, p_wants, p_savings = 0.50, 0.30, 0.20
-elif "Aggressive Wealth Accumulation" in allocation_strategy:
+elif "Aggressive" in allocation_strategy:
     p_needs, p_wants, p_savings = 0.40, 0.20, 0.40
 else:
     p_needs, p_wants, p_savings = 0.60, 0.20, 0.20
 
-amt_needs = user_income * p_needs
-amt_wants = user_income * p_wants
-amt_savings = user_income * p_savings
+amt_needs_target = user_income * p_needs
+amt_wants_target = user_income * p_wants
+amt_savings_target = user_income * p_savings
 
+st.markdown(f"""
+<div style='margin-top:0.5rem; padding-top:0.5rem; border-top:1px dashed #E2E8F0; color:#64748B; font-size:0.8rem; font-weight:500;'>
+    ✨ <strong style='color:#475569;'>Active Plan Profile:</strong> Allocation Balanced rule targets applied automatically across active 2026 data matrices.
+</div>
+""", unsafe_allow_html=True)
 st.markdown("</div>", unsafe_allow_html=True)
 
-# Process computations based on live arrays
-df_entries = pd.DataFrame(st.session_state['user_expenses']) if st.session_state['user_expenses'] else pd.DataFrame(columns=["Merchant", "Category", "Amount"])
+# Extract operations data from selected month session arrays
+current_month_entries = st.session_state['monthly_db'][st.session_state['active_month']]
+df_entries = pd.DataFrame(current_month_entries) if current_month_entries else pd.DataFrame(columns=["Merchant", "Category", "Amount"])
 
 spent_needs = df_entries[df_entries['Category'] == "Essential Needs"]['Amount'].sum()
 spent_wants = df_entries[df_entries['Category'] == "Personal Lifestyle & Wants"]['Amount'].sum()
 spent_savings = df_entries[df_entries['Category'] == "Future Savings & Investments"]['Amount'].sum()
 
-total_all_expenses = spent_needs + spent_wants + spent_savings
-used_percentage = int((total_all_expenses / user_income * 100)) if user_income > 0 else 0
+total_spent = spent_needs + spent_wants + spent_savings
+overall_ratio_used = int((total_spent / user_income * 100)) if user_income > 0 else 0
 
-if user_income <= 0:
-    st.info("👋 Setup your monthly income parameter configuration above to trigger the dynamic tracking curves.")
-else:
-    # =====================================================================
-    # 6. CENTRAL MATRIX AND BUDGET RATIO PROGRESS GRAPH
-    # =====================================================================
-    row1_left, row1_right = st.columns([2, 1])
-    
-    with row1_left:
-        st.markdown("<div class='finance-card' style='min-height:380px;'>", unsafe_allow_html=True)
-        st.markdown("<h4 style='margin:0 0 1.25rem 0; font-weight:700; color:#2D3748;'>Exact Strategic Allocation Directives Matrix</h4>", unsafe_allow_html=True)
-        
-        table_html = f"""
-        <table class='custom-table'>
-            <thead>
-                <tr>
-                    <th>Where You Should Spend</th>
-                    <th>Examples & Subcategories Covered</th>
-                    <th>Target Split</th>
-                    <th>Remaining Spending Budget Available</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style='font-weight:700; color:#4F46E5;'>📁 Essential Needs</td>
-                    <td style='color:#718096; font-size:0.8rem;'>Rent/Mortgage, Utilities, Groceries, Insurance, Minimum Debt Payments</td>
-                    <td><span class='pill-medium' style='background-color:#EEF2FF; color:#4F46E5;'>{int(p_needs*100)}%</span></td>
-                    <td style='font-weight:700; font-size:1rem; color:#2D3748;'>{curr_sym}{(amt_needs - spent_needs):,.2f}</td>
-                </tr>
-                <tr>
-                    <td style='font-weight:700; color:#D97706;'>📁 Personal Lifestyle & Wants</td>
-                    <td style='color:#718096; font-size:0.8rem;'>Dining Out, Entertainment, Hobbies, Travel, Shopping, Subscriptions</td>
-                    <td><span class='pill-medium' style='background-color:#FFFBEB; color:#D97706;'>{int(p_wants*100)}%</span></td>
-                    <td style='font-weight:700; font-size:1rem; color:#2D3748;'>{curr_sym}{(amt_wants - spent_wants):,.2f}</td>
-                </tr>
-                <tr>
-                    <td style='font-weight:700; color:#059669;'>📁 Future Savings & Investments</td>
-                    <td style='color:#718096; font-size:0.8rem;'>Emergency Fund, Retirement accounts (401k/IRA), Stocks, Cash Reserves</td>
-                    <td><span class='pill-medium' style='background-color:#ECFDF5; color:#059669;'>{int(p_savings*100)}%</span></td>
-                    <td style='font-weight:700; font-size:1rem; color:#2D3748;'>{curr_sym}{(amt_savings - spent_savings):,.2f}</td>
-                </tr>
-            </tbody>
-        </table>
-        """
-        st.markdown(table_html, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with row1_right:
-        st.markdown("<div class='finance-card' style='text-align:center; min-height:380px;'>", unsafe_allow_html=True)
-        st.markdown("<p style='margin:0; font-weight:700; color:#718096; text-transform:uppercase; font-size:0.8rem; letter-spacing:0.05em; text-align:left;'>Ratio Income Used</p>", unsafe_allow_html=True)
-        
-        ratio_fig = go.Figure(go.Pie(
-            values=[total_all_expenses, max(0.0, user_income - total_all_expenses)],
-            labels=['Income Spent', 'Income Available'],
-            hole=0.78,
-            marker=dict(colors=['#8B5CF6', '#E2E8F0']),
-            textinfo='none',
-            hoverinfo='label+value'
-        ))
-        ratio_fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=20, r=20, t=20, b=20),
-            showlegend=False,
-            annotations=[dict(text=f"<span style='font-size:2.2rem; font-weight:800; color:#2D3748;'>{used_percentage}%</span><br><span style='font-size:0.75rem; color:#A0AEC0; font-weight:600;'>USED</span>", x=0.5, y=0.5, showarrow=False)]
-        )
-        st.plotly_chart(ratio_fig, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+pct_needs_used = int((spent_needs / amt_needs_target * 100)) if amt_needs_target > 0 else 0
+pct_wants_used = int((spent_wants / amt_wants_target * 100)) if amt_wants_target > 0 else 0
+pct_savings_used = int((spent_savings / amt_savings_target * 100)) if amt_savings_target > 0 else 0
 
-    # =====================================================================
-    # 7. LIVE CATEGORY SPEND BREAKDOWN COMPARISON BAR GRAPH (COMPATIBLE MAPPING)
-    # =====================================================================
-    st.markdown("<div class='finance-card'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>📊 Live Target vs Spent Allocation Breakdown</h4>", unsafe_allow_html=True)
-    
-    categories = ['Essential Needs', 'Personal Lifestyle & Wants', 'Future Savings & Investments']
-    target_caps = [amt_needs, amt_wants, amt_savings]
-    current_outlays = [spent_needs, spent_wants, spent_savings]
-    
-    bar_fig = go.Figure()
-    bar_fig.add_trace(go.Bar(
-        name='Target Budget Limit',
-        x=categories,
-        y=target_caps,
-        marker=dict(color='#E2E8F0')  # Standard compatible property mapping
+# =====================================================================
+# 6. HIGH-FIDELITY CIRCULAR TRACKING GAUGES BANNER (FROM TEMPLATE IMAGE)
+# =====================================================================
+st.markdown("<div class='finance-card' style='padding:1rem 2rem;'>", unsafe_allow_html=True)
+gauge_col1, gauge_col2, gauge_col3, gauge_col4, gauge_col5 = st.columns(5)
+
+def construct_template_radial_gauge(label_text, percentage_val, prime_color):
+    fig = go.Figure(go.Pie(
+        values=[percentage_val, max(0, 100 - percentage_val)],
+        hole=0.80,
+        marker=dict(colors=[prime_color, '#F1F5F9']),
+        textinfo='none', hoverinfo='none'
     ))
-    bar_fig.add_trace(go.Bar(
-        name='Current Real Outlays',
-        x=categories,
-        y=current_outlays,
-        marker=dict(color='#8B5CF6')  # Standard compatible property mapping
-    ))
-    
-    bar_fig.update_layout(
-        barmode='group',
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color="#2D3748", family="Plus Jakarta Sans"),
-        margin=dict(l=40, r=20, t=20, b=20),
-        legend=dict(orientation="h", y=1.1, x=0),
-        hovermode="x unified"
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=10, r=10, t=10, b=10), showlegend=False, height=140,
+        annotations=[dict(text=f"<span style='font-size:1.3rem; font-weight:800; color:#1E293B;'>{percentage_val}%</span><br><span style='font-size:0.68rem; color:#94A3B8; font-weight:700;'>{label_text}</span>", x=0.5, y=0.5, showarrow=False, align="center")]
     )
-    bar_fig.update_xaxes(showgrid=False, tickfont=dict(color="#718096", size=11, weight="bold"))
-    bar_fig.update_yaxes(showgrid=True, gridcolor="#EDF2F7", tickfont=dict(color="#718096"))
+    return fig
+
+with gauge_col1:
+    # Master Total Ratio
+    st.plotly_chart(construct_template_radial_gauge("Ratio", overall_ratio_used, "#6366F1"), use_container_width=True, key="g1")
+with gauge_col2:
+    st.plotly_chart(construct_template_radial_gauge("Income Used", pct_needs_used, "#8B5CF6"), use_container_width=True, key="g2")
+with gauge_col3:
+    st.plotly_chart(construct_template_radial_gauge("Wants Used", pct_wants_used, "#A855F7"), use_container_width=True, key="g3")
+with gauge_col4:
+    st.plotly_chart(construct_template_radial_gauge("Savings Used", pct_savings_used, "#EC4899"), use_container_width=True, key="g4")
+with gauge_col5:
+    # Custom interactive reference tracking index marker
+    safety_margin = max(0, 100 - overall_ratio_used)
+    st.plotly_chart(construct_template_radial_gauge("Margin Left", safety_margin, "#3B82F6"), use_container_width=True, key="g5")
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+# =====================================================================
+# 7. CENTRAL DIRECTIVES MATRIX GRID & LIVE MATRIX TRACES
+# =====================================================================
+row2_left, row2_right = st.columns([1.8, 1.2])
+
+with row2_left:
+    st.markdown("<div class='finance-card' style='min-height:390px;'>", unsafe_allow_html=True)
+    st.markdown("<h5 style='margin:0 0 1rem 0; font-weight:700; color:#1E293B;'>Exact Strategic Allocation Directives Matrix</h5>", unsafe_allow_html=True)
     
-    st.plotly_chart(bar_fig, use_container_width=True)
+    # Production-ready custom implementation of the template multi-layered matrix table look
+    table_html = f"""
+    <table class='custom-table'>
+        <thead>
+            <tr style='background: linear-gradient(90deg, #6366F1 0%, #A855F7 100%);'>
+                <th style='border-top-left-radius:8px;'>Where You Spend</th>
+                <th>Target Split %</th>
+                <th>Target Allocation Bound</th>
+                <th>Current Month Spend</th>
+                <th style='border-top-right-radius:8px;'>Available Surplus Remainder</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style='font-weight:700; color:#4F46E5;'>📁 Essential Needs</td>
+                <td><span style='font-weight:600; color:#6366F1;'>{int(p_needs*100)}%</span></td>
+                <td style='color:#475569; font-weight:600;'>{curr_sym}{amt_needs_target:,.2f}</td>
+                <td style='color:#E11D48; font-weight:600;'>{curr_sym}{spent_needs:,.2f}</td>
+                <td style='font-weight:700; color:#16A34A;'>{curr_sym}{(amt_needs_target - spent_needs):,.2f}</td>
+            </tr>
+            <tr>
+                <td style='font-weight:700; color:#9333EA;'>📁 Personal Lifestyle & Wants</td>
+                <td><span style='font-weight:600; color:#A855F7;'>{int(p_wants*100)}%</span></td>
+                <td style='color:#475569; font-weight:600;'>{curr_sym}{amt_wants_target:,.2f}</td>
+                <td style='color:#E11D48; font-weight:600;'>{curr_sym}{spent_wants:,.2f}</td>
+                <td style='font-weight:700; color:#16A34A;'>{curr_sym}{(amt_wants_target - spent_wants):,.2f}</td>
+            </tr>
+            <tr>
+                <td style='font-weight:700; color:#DB2777;'>📁 Future Savings & Investments</td>
+                <td><span style='font-weight:600; color:#EC4899;'>{int(p_savings*100)}%</span></td>
+                <td style='color:#475569; font-weight:600;'>{curr_sym}{amt_savings_target:,.2f}</td>
+                <td style='color:#E11D48; font-weight:600;'>{curr_sym}{spent_savings:,.2f}</td>
+                <td style='font-weight:700; color:#16A34A;'>{curr_sym}{(amt_savings_target - spent_savings):,.2f}</td>
+            </tr>
+        </tbody>
+    </table>
+    """
+    st.markdown(table_html, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # =====================================================================
-    # 8. LOWER LEDGER LOG MATRIX & RADIAL SUMMARY DISTRIBUTION
-    # =====================================================================
-    row2_left, row2_right = st.columns([1.5, 1.5])
+with row2_right:
+    st.markdown("<div class='finance-card' style='min-height:390px;'>", unsafe_allow_html=True)
+    st.markdown("<h5 style='margin:0 0 1rem 0; font-weight:700; color:#1E293B;'>Live Session Expense Ledger</h5>", unsafe_allow_html=True)
     
-    with row2_left:
-        st.markdown("<div class='finance-card' style='min-height:380px;'>", unsafe_allow_html=True)
-        st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>Live Tracking Ledger Log</h4>", unsafe_allow_html=True)
-        if not df_entries.empty:
-            st.dataframe(df_entries, use_container_width=True, hide_index=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("Reset Matrix Ledger Data"):
-                st.session_state['user_expenses'] = []
-                st.rerun()
-        else:
-            st.markdown("<p style='color:#A0AEC0; font-size:0.85rem; padding-top:2rem; text-align:center;'>No outlays logged inside this active monthly workspace session.</p>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-        
-    with row2_right:
-        st.markdown("<div class='finance-card' style='min-height:380px;'>", unsafe_allow_html=True)
-        st.markdown("<p style='margin:0 0 0.5rem 0; font-weight:700; color:#718096; text-transform:uppercase; font-size:0.8rem; letter-spacing:0.05em;'>Active Allocation Outflows</p>", unsafe_allow_html=True)
-        
-        donut_fig = go.Figure(go.Pie(
-            values=[spent_needs, spent_wants, spent_savings, max(0.0, user_income - total_all_expenses)],
-            labels=['Needs Outflows', 'Wants Outflows', 'Savings Transferred', 'Remaining Safety Margin'],
-            hole=0.72,
-            marker=dict(colors=['#6366F1', '#F59E0B', '#10B981', '#F1F5F9']),
-            textinfo='none',
-            hoverinfo='label+value'
-        ))
-        donut_fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=10, r=10, t=10, b=10),
-            showlegend=True,
-            legend=dict(orientation="h", y=-0.1, x=-0.05, font=dict(color="#4A5568", size=10))
+    if not df_entries.empty:
+        st.dataframe(
+            df_entries[["Merchant", "Category", "Amount"]],
+            use_container_width=True,
+            hide_index=True
         )
-        st.plotly_chart(donut_fig, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("Reset Month Workspace Ledger"):
+            st.session_state['monthly_db'][st.session_state['active_month']] = []
+            st.rerun()
+    else:
+        st.markdown(f"<p style='color:#94A3B8; font-size:0.85rem; padding-top:3rem; text-align:center;'>No expenses recorded yet for the month of {st.session_state['active_month']}.</p>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
