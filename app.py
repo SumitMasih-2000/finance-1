@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 def inject_personal_finance_theme():
-    """Injects high-fidelity stylesheets matching the new white-purple gradient layout."""
+    """Injects high-fidelity stylesheets matching the white-purple gradient layout."""
     st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&display=swap');
@@ -137,7 +137,7 @@ with st.sidebar:
     st.markdown('<div class="sidebar-nav-item active">🏠 Dashboard</div>', unsafe_allow_html=True)
     st.markdown("<br><hr style='border-color:#E2E8F0;'><br>", unsafe_allow_html=True)
     
-    # Clean Transaction Logger inside the panel sidebar layout
+    # Transaction input fields inside the sidebar panel layout
     st.markdown("<h4 style='font-weight:700; color:#2D3748; margin-bottom:1rem;'>✍️ Log Transaction</h4>", unsafe_allow_html=True)
     entry_title = st.text_input("Merchant Name", placeholder="e.g., Landlord Corp, Target")
     entry_category = st.selectbox("Category Target Pool", ["Essential Needs", "Personal Lifestyle & Wants", "Future Savings & Investments"])
@@ -299,7 +299,7 @@ else:
         st.markdown("</div>", unsafe_allow_html=True)
 
     # =====================================================================
-    # 7. VISUAL WORKSPACE OVERVIEW BAR GRAPH (FIXED PROPERTY SYSTEM)
+    # 7. LIVE CATEGORY SPEND BREAKDOWN COMPARISON BAR GRAPH
     # =====================================================================
     st.markdown("<div class='finance-card'>", unsafe_allow_html=True)
     st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>📊 Live Target vs Spent Allocation Breakdown</h4>", unsafe_allow_html=True)
@@ -313,15 +313,13 @@ else:
         name='Target Budget Limit',
         x=categories,
         y=target_caps,
-        marker_color='#E2E8F0',
-        marker_corner_radius=10  # <-- Corrected syntax property replacement
+        marker=dict(color='#E2E8F0', corner_radius=10)  # <-- Fixed nested syntax mapping
     ))
     bar_fig.add_trace(go.Bar(
         name='Current Real Outlays',
         x=categories,
         y=current_outlays,
-        marker_color='#8B5CF6',
-        marker_corner_radius=10  # <-- Corrected syntax property replacement
+        marker=dict(color='#8B5CF6', corner_radius=10)  # <-- Fixed nested syntax mapping
     ))
     
     bar_fig.update_layout(
