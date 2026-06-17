@@ -1,22 +1,19 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
-import datetime
 
 # =====================================================================
-# 1. APPLICATION ARCHITECTURE & THEME ENGINE CONFIGURATION
+# 1. APPLICATION ARCHITECTURE & UI TEMPLATE THEME CONFIGURATION
 # =====================================================================
 st.set_page_config(
-    page_title="Money T - Dashboard Suite",
+    page_title="Money T - Personalized Planner Suite",
     page_icon="💰",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 def inject_moneyt_template_theme():
-    """Injects high-fidelity stylesheets matching the template light mode."""
+    """Injects high-fidelity stylesheets matching the template light mode style."""
     st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
@@ -70,7 +67,7 @@ def inject_moneyt_template_theme():
             border-radius: 16px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
             border: 1px solid #E4E4E7;
-            min-height: 145px;
+            min-height: 125px;
         }
         .kpi-title {
             font-size: 0.85rem;
@@ -84,16 +81,6 @@ def inject_moneyt_template_theme():
             margin-top: 0.4rem;
             letter-spacing: -0.04em;
         }
-        .kpi-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.2rem 0.4rem;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            margin-top: 0.6rem;
-        }
-        .badge-inc { background-color: #DCFCE7; color: #16A34A; }
         
         .border-purple { border-top: 4px solid #6366F1; }
         .border-orange { border-top: 4px solid #F97316; }
@@ -137,225 +124,190 @@ def inject_moneyt_template_theme():
 inject_moneyt_template_theme()
 
 # =====================================================================
-# 2. RUNTIME COMPLETE FINANCIAL DATA ENGINE
-# =====================================================================
-@st.cache_data
-def get_clean_mock_dataset():
-    np.random.seed(42)
-    today = datetime.date.today()
-    date_range = pd.date_range(end=today, periods=30, freq='D')
-    
-    income_curve = 550 + 120 * np.sin(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 10, 30)
-    expense_curve = 380 + 90 * np.cos(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 8, 30)
-    
-    df_trends = pd.DataFrame({'Date': date_range, 'Income': income_curve, 'Expense': expense_curve})
-    
-    ledger_records = [
-        {"Titel": "Dana Schultz", "Category": "Entertainment", "Medium": "Visa", "Color": "#EEF2FF", "Txt": "#4F46E5", "BaseAmount": 550.00, "Date": "22 Sep - 10 AM"},
-        {"Titel": "Jassie Moen", "Category": "Food & Beverage", "Medium": "Paypal", "Color": "#ECFDF5", "Txt": "#059669", "BaseAmount": 120.00, "Date": "21 Sep - 10 AM"},
-        {"Titel": "Carroll Emmerich", "Category": "Housing", "Medium": "Payoner", "Color": "#FFFBEB", "Txt": "#D97706", "BaseAmount": 2200.00, "Date": "20 Sep - 10 AM"},
-        {"Titel": "Elaine Dicki", "Category": "Digital Shopping", "Medium": "Visa", "Color": "#EEF2FF", "Txt": "#4F46E5", "BaseAmount": 45.00, "Date": "19 Sep - 10 AM"},
-        {"Titel": "Ray Bergnaum", "Category": "Transportation", "Medium": "Payoner", "Color": "#FFFBEB", "Txt": "#D97706", "BaseAmount": 85.00, "Date": "18 Sep - 10 AM"},
-        {"Titel": "Rose Dickinson", "Category": "Healthcare", "Medium": "Paypal", "Color": "#ECFDF5", "Txt": "#059669", "BaseAmount": 310.00, "Date": "17 Sep - 10 AM"}
-    ]
-    df_ledger = pd.DataFrame(ledger_records)
-    return df_trends, df_ledger
-
-chart_data, master_ledger = get_clean_mock_dataset()
-
-# =====================================================================
-# 3. SIDEBAR LAYOUT LAYER
+# 2. SIDEBAR NAVIGATION LAYOUT
 # =====================================================================
 with st.sidebar:
     st.markdown("<h2 style='margin-bottom:0rem; font-weight:700;'>💳 Money T</h2>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
     st.markdown('<div class="sidebar-section-lbl">MENU</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item active">🏠 Dashboard</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item">🔄 Transactions</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item">📊 Analytics</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item">⏱️ History</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item active">🏠 Dashboard Plan</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">📊 Allocation Engine</div>', unsafe_allow_html=True)
 
 # =====================================================================
-# 4. ENGINE HEADER SUTTE
+# 3. INTERACTIVE HEADER & ENGINE CONTROL CONTROLS
 # =====================================================================
-st.markdown("<h1 style='color:#111114; font-weight:700; margin-bottom: 0rem;'>Wellcome, Ethan Cole 👋</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color:#71717A; margin-top:0.25rem; margin-bottom:1.5rem;'>360° Financial Visibility Suite Overview Matrix</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:#111114; font-weight:700; margin-bottom: 0rem;'>Personalized Allocation Strategy Matrix</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color:#71717A; margin-top:0.25rem; margin-bottom:1.5rem;'>Zero Dummy Data. Powered entirely by your financial profile inputs.</p>", unsafe_allow_html=True)
 
-# =====================================================================
-# 5. DYNAMIC CURRENCY & EXPENSE INTERACTION MATRIX
-# =====================================================================
+# --- USER ENTERED REAL-TIME INPUT ENGINE ---
 st.markdown("<div style='background-color: #FFFFFF; padding:1.25rem; border-radius:14px; border:1px solid #E4E4E7; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-st.markdown("<h4 style='margin:0 0 0.75rem 0; font-weight:700; color:#111114;'>⚙️ Live Financial Control Board</h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='margin:0 0 0.75rem 0; font-weight:700; color:#111114;'>⚙️ Live Budget Planner Inputs</h4>", unsafe_allow_html=True)
 
-config_col1, config_col2, config_col3 = st.columns(3)
+config_col1, config_col2, config_col3 = st.columns([1.5, 1.5, 2])
 
 with config_col1:
     currency_choice = st.selectbox(
-        "Select Reporting Currency",
+        "Select Local Currency Token",
         options=["USD ($)", "EUR (€)", "GBP (£)", "JPY (¥)", "INR (₹)"]
     )
-    
-    # Currency symbol mapping
     symbols = {"USD ($)": "$", "EUR (€)": "€", "GBP (£)": "£", "JPY (¥)": "¥", "INR (₹)": "₹"}
     curr_sym = symbols[currency_choice]
-    
-    # Cross conversion calculation rates relative to baseline USD values
-    rates = {"USD ($)": 1.0, "EUR (€)": 0.92, "GBP (£)": 0.79, "JPY (¥)": 156.0, "INR (₹)": 83.5}
-    curr_rate = rates[currency_choice]
 
 with config_col2:
-    # Custom interactive base income input system
-    user_income_input = st.number_input(
-        f"Enter Base Monthly Income ({curr_sym}):", 
+    user_income = st.number_input(
+        f"Enter Your Real Monthly Net Income ({curr_sym}):", 
         min_value=0.0, 
-        value=8500.0 * curr_rate,
-        step=50.0
+        value=0.0,
+        step=100.0
     )
 
 with config_col3:
-    target_amount = st.number_input(
-        f"Max Expense Threshold Search ({curr_sym}):", 
-        min_value=0.0, 
-        value=500.0 * curr_rate, 
-        step=10.0
+    allocation_strategy = st.selectbox(
+        "Select Budget Strategy Rule",
+        options=[
+            "Balanced Strategy (50% Needs, 30% Wants, 20% Savings)",
+            "Aggressive Investment Strategy (40% Needs, 20% Wants, 40% Savings)",
+            "Conservative Minimum Strategy (60% Needs, 20% Wants, 20% Savings)"
+        ]
     )
 
-# Normalize currencies back to standard operational data bounds
-target_amount_usd = target_amount / curr_rate
-filtered_ledger = master_ledger[master_ledger['BaseAmount'] <= target_amount_usd]
-total_filtered_spend_converted = (filtered_ledger['BaseAmount'].sum()) * curr_rate
+# Deconstruct Strategy Splitting Rules
+if "Balanced Strategy" in allocation_strategy:
+    p_needs, p_wants, p_savings = 0.50, 0.30, 0.20
+elif "Aggressive Investment" in allocation_strategy:
+    p_needs, p_wants, p_savings = 0.40, 0.20, 0.40
+else:
+    p_needs, p_wants, p_savings = 0.60, 0.20, 0.20
+
+# Absolute Dynamic Allocations Calculation
+amt_needs = user_income * p_needs
+amt_wants = user_income * p_wants
+amt_savings = user_income * p_savings
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# =====================================================================
-# 6. DYNAMIC DESIGN METRIC CARDS (AUTOMATICALLY CONVERTED)
-# =====================================================================
-kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
+# Check to block visual rendering if no data is present
+if user_income <= 0:
+    st.info("👋 Please enter an income value greater than 0 above to generate where and how much you should spend.")
+else:
+    # =====================================================================
+    # 4. CALCULATED TARGET BUDGET KPI CARDS
+    # =====================================================================
+    kpi_col1, kpi_col2, kpi_col3 = st.columns(3)
 
-with kpi_col1:
-    st.markdown(f"""
-    <div class="kpi-wrapper border-purple">
-        <div class="kpi-title">Calculated Total Income</div>
-        <div class="kpi-value">{curr_sym}{user_income_input:,.2f}</div>
-        <div class="kpi-badge badge-inc">▲ Active Base Settings</div>
-    </div>
-    """, unsafe_allow_html=True)
+    with kpi_col1:
+        st.markdown(f"""
+        <div class="kpi-wrapper border-purple">
+            <div class="kpi-title">Essential Needs Limit ({int(p_needs*100)}%)</div>
+            <div class="kpi-value" style="color: #4F46E5;">{curr_sym}{amt_needs:,.2f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-with kpi_col2:
-    st.markdown(f"""
-    <div class="kpi-wrapper border-orange">
-        <div class="kpi-title">Calculated Spending Filter</div>
-        <div class="kpi-value">{curr_sym}{total_filtered_spend_converted:,.2f}</div>
-        <div class="kpi-badge badge-inc" style="background-color:#E0F2FE; color:#0369A1;">⚙️ Under Threshold Max</div>
-    </div>
-    """, unsafe_allow_html=True)
+    with kpi_col2:
+        st.markdown(f"""
+        <div class="kpi-wrapper border-orange">
+            <div class="kpi-title">Lifestyle & Wants Cap ({int(p_wants*100)}%)</div>
+            <div class="kpi-value" style="color: #F97316;">{curr_sym}{amt_wants:,.2f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-with kpi_col3:
-    st.markdown(f"""
-    <div class="kpi-wrapper border-teal">
-        <div class="kpi-title">Spending Goal Limit</div>
-        <div class="kpi-value">{curr_sym}{(9254.0 * curr_rate):,.2f}</div>
-        <div class="kpi-badge badge-inc">▲ 15% Cap Buffer</div>
-    </div>
-    """, unsafe_allow_html=True)
+    with kpi_col3:
+        st.markdown(f"""
+        <div class="kpi-wrapper border-green">
+            <div class="kpi-title">Financial Savings Reserve ({int(p_savings*100)}%)</div>
+            <div class="kpi-value" style="color: #10B981;">{curr_sym}{amt_savings:,.2f}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-with kpi_col4:
-    st.markdown(f"""
-    <div class="kpi-wrapper border-green">
-        <div class="kpi-title">Active Logged Items</div>
-        <div class="kpi-value">{len(filtered_ledger)} / {len(master_ledger)}</div>
-        <div class="kpi-badge badge-inc">🎯 Records Matched</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# Shared Chart Configuration Layers
-def format_chart_layout(fig):
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color="#111114", family="Plus Jakarta Sans"),
-        margin=dict(l=20, r=20, t=20, b=20),
-        hovermode="x unified"
-    )
-    fig.update_xaxes(showgrid=True, gridcolor="#E4E4E7", tickfont=dict(color="#71717A"))
-    fig.update_yaxes(showgrid=True, gridcolor="#E4E4E7", tickfont=dict(color="#71717A"))
-
-# =====================================================================
-# 7. CENTRAL ANALYTICS GRID METRICS (ASSETS CURVE & GAUGES)
-# =====================================================================
-body_col_left, body_col_right = st.columns([2, 1])
-
-with body_col_left:
-    # Asset Progress Graph Block
-    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#111114;'>Your Assets Progression Matrix</h4>", unsafe_allow_html=True)
-    
-    asset_fig = go.Figure()
-    asset_fig.add_trace(go.Scatter(
-        x=chart_data['Date'], y=chart_data['Income'] * curr_rate, 
-        name='Income Outflows', mode='lines', line=dict(color='#10B981', width=4.5),
-        fill='tozeroy', fillcolor='rgba(16, 185, 129, 0.03)'
-    ))
-    asset_fig.add_trace(go.Scatter(
-        x=chart_data['Date'], y=chart_data['Expense'] * curr_rate, 
-        name='Expense Outflows', mode='lines', line=dict(color='#F97316', width=4),
-        fill='tozeroy', fillcolor='rgba(249, 115, 22, 0.03)'
-    ))
-    
-    format_chart_layout(asset_fig)
-    asset_fig.update_layout(legend=dict(orientation="h", y=1.1, x=0.6))
-    st.plotly_chart(asset_fig, use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
     st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Custom HTML Table Component Clone (Where and how much was spent)
-    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-    st.markdown("<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;'><h4 style='margin:0; font-weight:700; color:#111114;'>Dynamic Expense Breakdown Engine</h4></div>", unsafe_allow_html=True)
-    
-    if not filtered_ledger.empty:
-        table_html = "<table class='custom-table'><thead><tr style='background-color: #FAFAFA;'><th>Recipient</th><th>Category Pool</th><th>Method</th><th>Total Cost</th></tr></thead><tbody>"
-        for _, row in filtered_ledger.iterrows():
-            converted_amount = row['BaseAmount'] * curr_rate
+
+    # =====================================================================
+    # 5. DATA TARGETS SPLIT GRAPHING & ENGINE ANALYSIS
+    # =====================================================================
+    body_col_left, body_col_right = st.columns([1.8, 1.2])
+
+    with body_col_left:
+        # Dynamic Recommendation Details Action Grid
+        st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
+        st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#111114;'>Exact Spending Category Directives</h4>", unsafe_allow_html=True)
+        
+        # Build out direct spending instructions structured table row lists
+        budget_directives = [
+            {
+                "Category Pool": "Essential Needs",
+                "Subcategories Included": "Rent/Mortgage, Utilities, Groceries, Insurance, Minimum Debt Payments",
+                "Target Percentage": f"{int(p_needs*100)}%",
+                "Max Budget Recommendation": f"{curr_sym}{amt_needs:,.2f}",
+                "ColorPill": "#EEF2FF", "TxtColor": "#4F46E5"
+            },
+            {
+                "Category Pool": "Personal Lifestyle & Wants",
+                "Subcategories Included": "Dining Out, Entertainment, Hobbies, Travel, Shopping, Subscriptions",
+                "Target Percentage": f"{int(p_wants*100)}%",
+                "Max Budget Recommendation": f"{curr_sym}{amt_wants:,.2f}",
+                "ColorPill": "#FFFBEB", "TxtColor": "#D97706"
+            },
+            {
+                "Category Pool": "Future Savings & Investments",
+                "Subcategories Included": "Emergency Fund, Retirement accounts (401k/IRA), Stocks, Cash Reserves",
+                "Target Percentage": f"{int(p_savings*100)}%",
+                "Max Budget Recommendation": f"{curr_sym}{amt_savings:,.2f}",
+                "ColorPill": "#ECFDF5", "TxtColor": "#059669"
+            }
+        ]
+        
+        table_html = """
+        <table class='custom-table'>
+            <thead>
+                <tr style='background-color: #FAFAFA;'>
+                    <th>Where You Should Spend</th>
+                    <th>Examples Included Below</th>
+                    <th>Budget Target Split</th>
+                    <th>Recommended Amount Max</th>
+                </tr>
+            </thead>
+            <tbody>
+        """
+        for row in budget_directives:
             table_html += f"""
             <tr>
-                <td style='font-weight:600;'>👤 {row['Titel']}</td>
-                <td style='font-weight:500;'>📂 {row['Category']}</td>
-                <td><span class='pill-medium' style='background-color:{row['Color']}; color:{row['Txt']};'>{row['Medium']}</span></td>
-                <td style='font-weight:700; color: #EF4444;'>-{curr_sym}{converted_amount:,.2f}</td>
+                <td style='font-weight:600;'>📁 {row['Category Pool']}</td>
+                <td style='color:#71717A; font-size:0.8rem;'>{row['Subcategories Included']}</td>
+                <td><span class='pill-medium' style='background-color:{row['ColorPill']}; color:{row['TxtColor']};'>{row['Target Percentage']}</span></td>
+                <td style='font-weight:700;'>{row['Max Budget Recommendation']}</td>
             </tr>
             """
         table_html += "</tbody></table>"
         st.markdown(table_html, unsafe_allow_html=True)
-    else:
-        st.markdown("<p style='color:#EF4444; font-weight:600;'>No items found costing less than or equal to the filtered selection value.</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-with body_col_right:
-    # Half Donut / Gauge Arc Transaction View Block
-    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7; min-height:430px;'>", unsafe_allow_html=True)
-    st.markdown("<div style='display:flex; justify-content:space-between;'><span style='font-weight:700; color:#111114;'>Operational Metrics</span></div>", unsafe_allow_html=True)
-    
-    if not filtered_ledger.empty:
-        cat_group = filtered_ledger.groupby('Category')['BaseAmount'].sum().reset_index()
+    with body_col_right:
+        # High Fidelity Visual Donut Matrix
+        st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7; min-height:360px;'>", unsafe_allow_html=True)
+        st.markdown("<span style='font-weight:700; color:#111114;'>Visual Budget Distribution Target</span>", unsafe_allow_html=True)
+        
+        labels = ['Essential Needs', 'Lifestyle & Wants', 'Future Savings']
+        values = [amt_needs, amt_wants, amt_savings]
+        colors = ['#6366F1', '#F97316', '#10B981']
+        
         gauge_fig = go.Figure(go.Pie(
-            values=cat_group['BaseAmount'] * curr_rate,
-            labels=cat_group['Category'],
+            values=values,
+            labels=labels,
             hole=0.7,
-            rotation=90,
-            direction='clockwise',
-            textinfo='none'
+            marker=dict(colors=colors),
+            textinfo='none',
+            hoverinfo='label+value'
         ))
-        format_chart_layout(gauge_fig)
+        
         gauge_fig.update_layout(
-            showlegend=True, 
-            legend=dict(orientation="h", y=-0.1, x=-0.1),
-            annotations=[dict(text=f'{curr_sym}{total_filtered_spend_converted:,.0f}<br><span style="font-size:0.75rem; color:#10B981;">Active Volume</span>', x=0.5, y=0.5, font_size=16, font_weight="bold", showarrow=False)]
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(color="#111114", family="Plus Jakarta Sans"),
+            margin=dict(l=10, r=10, t=10, b=10),
+            showlegend=True,
+            legend=dict(orientation="h", y=-0.1, x=-0.05)
         )
+        
         st.plotly_chart(gauge_fig, use_container_width=True)
-    else:
-        st.markdown("<p style='text-align:center; padding-top:4rem; color:#71717A;'>Waiting for filter values...</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
