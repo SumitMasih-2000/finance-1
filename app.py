@@ -22,7 +22,6 @@ COLOR_SECONDARY = "#10B981"  # Green
 COLOR_ACCENT = "#F59E0B"     # Gold
 COLOR_DANGER = "#EF4444"     # Red
 COLOR_MUTED = "#64748B"      # Gray
-COLOR_BG_CARD = "#FFFFFF"
 
 def inject_premium_css():
     """Injects commercial grade structural layout styling mimicking premium platforms."""
@@ -89,18 +88,18 @@ def inject_premium_css():
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.06);
         }
         
-        div[data-testid="stSidebarUserContent"] {
-            padding-top: 2rem;
-        }
-        
-        .stButton>button {
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        
+        /* Clean Interface Utilities */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
+        
+        /* Custom Styling for the Filter Section Header */
+        .filter-banner {
+            background-color: #FFFFFF;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 1rem;
+        }
     </style>
     """, unsafe_allow_html=True)
 
@@ -111,14 +110,12 @@ inject_premium_css()
 # =====================================================================
 @st.cache_data
 def generate_synthetic_ledger():
-    """Generates a perfectly correlated, multi-variate continuous financial ledger covering 365 days."""
     np.random.seed(101)
     today = datetime.date.today()
     start_time = today - datetime.timedelta(days=365)
     date_series = pd.date_range(start_time, today, freq='D')
     
     ledger_records = []
-    
     income_streams = ['Corporate Salary', 'Consulting Advisory', 'Equity Dividends']
     expense_universe = {
         'Housing': ['Mortgage Service', 'Grid Utilities', 'Property Management'],
@@ -147,7 +144,6 @@ def generate_synthetic_ledger():
             selected_cat = np.random.choice(list(expense_universe.keys()))
             selected_sub = np.random.choice(expense_universe[selected_cat])
             processed_amount = np.round(np.random.exponential(scale=42.0) + 6.50, 2)
-            
             target_budget = 650.00 if selected_cat in ['Food & Beverage', 'Digital Shopping'] else 350.00
             ledger_records.append([current_date, 'Expense', selected_cat, selected_sub, f"Settlement transaction descriptor to {selected_sub}", processed_amount, 'None', target_budget, 'None', 'None'])
             
@@ -173,83 +169,75 @@ if 'fin_data' not in st.session_state:
 
 def execute_pure_linear_forecast(x_data, y_data, steps_forward=6):
     n = len(x_data)
-    if n < 2:
-        return np.array([]), np.array([])
-    
-    x = np.array(x_data, dtype=float)
-    y = np.array(y_data, dtype=float)
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
-    
+    if n < 2: return np.array([]), np.array([])
+    x, y = np.array(x_data, dtype=float), np.array(y_data, dtype=float)
+    x_mean, y_mean = np.mean(x), np.mean(y)
     numerator = np.sum((x - x_mean) * (y - y_mean))
     denominator = np.sum((x - x_mean) ** 2)
-    
     slope = 0 if denominator == 0 else numerator / denominator
     intercept = y_mean - (slope * x_mean)
-        
-    last_x = x[-1]
-    future_x = np.array([last_x + (i * 30.4) for i in range(1, steps_forward + 1)])
-    projected_y = intercept + (slope * future_x)
-    
-    return future_x, projected_y
+    future_x = np.array([x[-1] + (i * 30.4) for i in range(1, steps_forward + 1)])
+    return future_x, intercept + (slope * future_x)
 
 # =====================================================================
-# 4. GLOBAL SIDEBAR MULTI-FILTER RUNTIME
+# 3. SIDEBAR STRUCTURE (CLEAN, MINIMALIST UTILITIES ONLY)
 # =====================================================================
 st.sidebar.markdown("<h2 style='color:#2563EB; font-weight:700;'>💎 Aura</h2>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='font-size:0.85rem; color:#64748B; margin-top:-10px;'>System Version: 2026.1</p>", unsafe_allow_html=True)
 st.sidebar.divider()
 
-# --- FILTER A: DATE CONTROL RANGE ---
-st.sidebar.markdown("### 🗓️ Macro Date Bounds")
-active_ledger = st.session_state['fin_data'].copy()
-absolute_min = active_ledger['Date'].min().to_pydatetime()
-absolute_max = active_ledger['Date'].max().to_pydatetime()
-selected_bounds = st.sidebar.date_input("Analysis Window", [absolute_min, absolute_max], min_value=absolute_min, max_value=absolute_max)
-
-if len(selected_bounds) == 2:
-    filtered_ledger = active_ledger[(active_ledger['Date'] >= pd.to_datetime(selected_bounds[0])) & (active_ledger['Date'] <= pd.to_datetime(selected_bounds[1]))]
-else:
-    filtered_ledger = active_ledger
-
-# --- FILTER B: REGULAR MULTI-SELECT STRATIFICATION MATRIX ---
-st.sidebar.markdown("### 🔍 Advanced Cross-Filters")
-
-all_types = list(filtered_ledger['Transaction Type'].unique())
-selected_types = st.sidebar.multiselect("Transaction Types", options=all_types, default=all_types)
-if selected_types:
-    filtered_ledger = filtered_ledger[filtered_ledger['Transaction Type'].isin(selected_types)]
-
-all_categories = list(filtered_ledger['Category'].unique())
-selected_categories = st.sidebar.multiselect("Isolate Categories", options=all_categories, default=all_categories)
-if selected_categories:
-    filtered_ledger = filtered_ledger[filtered_ledger['Category'].isin(selected_categories)]
-
-all_goals = list(filtered_ledger['Goal Name'].unique())
-selected_goals = st.sidebar.multiselect("Target Milestones Filter", options=all_goals, default=all_goals)
-if selected_goals:
-    filtered_ledger = filtered_ledger[filtered_ledger['Goal Name'].isin(selected_goals)]
-
-st.sidebar.divider()
-
-# --- FILTER C: EXTERNAL DATA SYNC INTERFACE ---
 st.sidebar.markdown("### 📥 Document Sync Engine")
-uploaded_document = st.sidebar.file_uploader("Upload External Transaction Ledger", type=['csv', 'xlsx'])
-
+uploaded_document = st.sidebar.file_uploader("Upload External Ledger", type=['csv', 'xlsx'])
 if uploaded_document is not None:
     try:
         imported_df = pd.read_csv(uploaded_document) if uploaded_document.name.endswith('.csv') else pd.read_excel(uploaded_document)
-        required_schema = ['Date', 'Transaction Type', 'Category', 'Amount']
-        if all(col in imported_df.columns for col in required_schema):
-            imported_df['Date'] = pd.to_datetime(imported_df['Date'])
-            st.session_state['fin_data'] = imported_df
-            st.sidebar.success("Database engine synchronized cleanly.")
-        else:
-            st.sidebar.error("Schema Mismatch. Critical tracking vector dropped.")
-    except Exception as error_msg:
-        st.sidebar.error(f"Sync Fault: {str(error_msg)}")
+        imported_df['Date'] = pd.to_datetime(imported_df['Date'])
+        st.session_state['fin_data'] = imported_df
+        st.sidebar.success("Database engine synchronized.")
+    except Exception as e:
+        st.sidebar.error(f"Sync Fault: {str(e)}")
 
 search_term = st.sidebar.text_input("📝 Search Line-Item Descriptors", "")
+
+# =====================================================================
+# 4. MAIN PAGE ENGINE & PROFESSIONAL HORIZONTAL FILTER BAR
+# =====================================================================
+st.markdown("<h1 style='color:#0F172A; font-weight:700; margin-bottom: 0.2rem;'>Aura | Financial Command</h1>", unsafe_allow_html=True)
+
+# THE NEW WAY: Horizontal Enterprise Filtering Toolbar
+with st.expander("🎛️  Database Filters & Analysis Parameters", expanded=True):
+    # Setup 4 distinct tracking columns side-by-side
+    f_col1, f_col2, f_col3, f_col4 = st.columns(4)
+    
+    active_ledger = st.session_state['fin_data'].copy()
+    
+    with f_col1:
+        absolute_min = active_ledger['Date'].min().to_pydatetime()
+        absolute_max = active_ledger['Date'].max().to_pydatetime()
+        selected_bounds = st.date_input("Analysis Window", [absolute_min, absolute_max], min_value=absolute_min, max_value=absolute_max)
+        if len(selected_bounds) == 2:
+            filtered_ledger = active_ledger[(active_ledger['Date'] >= pd.to_datetime(selected_bounds[0])) & (active_ledger['Date'] <= pd.to_datetime(selected_bounds[1]))]
+        else:
+            filtered_ledger = active_ledger
+
+    with f_col2:
+        all_types = list(filtered_ledger['Transaction Type'].unique())
+        selected_types = st.multiselect("Transaction Types", options=all_types, default=all_types)
+        if selected_types:
+            filtered_ledger = filtered_ledger[filtered_ledger['Transaction Type'].isin(selected_types)]
+
+    with f_col3:
+        all_categories = list(filtered_ledger['Category'].unique())
+        selected_categories = st.multiselect("Isolate Categories", options=all_categories, default=all_categories)
+        if selected_categories:
+            filtered_ledger = filtered_ledger[filtered_ledger['Category'].isin(selected_categories)]
+
+    with f_col4:
+        all_goals = list(filtered_ledger['Goal Name'].unique())
+        selected_goals = st.multiselect("Target Milestones", options=all_goals, default=all_goals)
+        if selected_goals:
+            filtered_ledger = filtered_ledger[filtered_ledger['Goal Name'].isin(selected_goals)]
+
 if search_term:
     filtered_ledger = filtered_ledger[
         filtered_ledger['Description'].str.contains(search_term, case=False, na=False) |
@@ -269,20 +257,11 @@ def render_kpi_card(title, cash_value, delta_string="", positive_vector=True):
     """, unsafe_allow_html=True)
 
 # =====================================================================
-# 5. DASHBOARD VIEW CONTROLLERS (TAB-BASED DESIGN SYSTEM)
+# 5. TAB-BASED ANALYTICS VIEWPORTS
 # =====================================================================
-st.markdown("<h1 style='color:#0F172A; font-weight:700;'>Aura | Financial Command</h1>", unsafe_allow_html=True)
-
 tab_exec, tab_expense, tab_income, tab_budget, tab_savings, tab_asset, tab_milestones, tab_predictive, tab_export = st.tabs([
-    "📊 Executive Summary", 
-    "💸 Expense Analytics", 
-    "📈 Inflow Channels", 
-    "🛡️ Budget Constraints", 
-    "🏦 Savings Vaults", 
-    "💼 Asset Allocation", 
-    "🎯 Goal Tracks", 
-    "🧠 Predictive AI Engine", 
-    "💾 Data Sync & Export"
+    "📊 Executive Summary", "💸 Expense Analytics", "📈 Inflow Channels", "🛡️ Budget Constraints", 
+    "🏦 Savings Vaults", "💼 Asset Allocation", "🎯 Goal Tracks", "🧠 Predictive AI Engine", "💾 Data Export"
 ])
 
 # --- TAB 1: EXECUTIVE SUMMARY ---
@@ -296,14 +275,10 @@ with tab_exec:
     financial_health_index = int(max(10, min(100, (savings_ratio * 1.3) + (65 if gross_expenses < gross_income else 15))))
     
     kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
-    with kpi_col1:
-        render_kpi_card("Total Verified Income", f"${gross_income:,.2f}", "4.8% upward drift vector", True)
-    with kpi_col2:
-        render_kpi_card("System Structural Burn", f"${gross_expenses:,.2f}", "0.9% system optimization save", True)
-    with kpi_col3:
-        render_kpi_card("Net Capital Retained", f"${net_savings:,.2f}", f"Savings Rate: {savings_ratio:.1f}%", savings_ratio >= 20.0)
-    with kpi_col4:
-        render_kpi_card("Estimated Capital Net Worth", f"${calculated_net_worth:,.2f}", f"Health Index Score: {financial_health_index}/100", financial_health_index > 75)
+    with kpi_col1: render_kpi_card("Total Verified Income", f"${gross_income:,.2f}", "4.8% upward velocity", True)
+    with kpi_col2: render_kpi_card("System Structural Burn", f"${gross_expenses:,.2f}", "0.9% optimized baseline", True)
+    with kpi_col3: render_kpi_card("Net Capital Retained", f"${net_savings:,.2f}", f"Savings Rate: {savings_ratio:.1f}%", savings_ratio >= 20.0)
+    with kpi_col4: render_kpi_card("Estimated Net Worth", f"${calculated_net_worth:,.2f}", f"Health Index: {financial_health_index}/100", financial_health_index > 75)
         
     st.divider()
     
@@ -320,7 +295,7 @@ with tab_exec:
         st.plotly_chart(flow_graphic, use_container_width=True)
         
     with chart_col_right:
-        st.markdown("### System Health Optimization Gauge")
+        st.markdown("### System Health Optimization")
         gauge_graphic = go.Figure(go.Indicator(
             mode="gauge+number", value=financial_health_index, domain={'x': [0, 1], 'y': [0, 1]},
             gauge={
@@ -331,28 +306,6 @@ with tab_exec:
         ))
         gauge_graphic.update_layout(margin=dict(l=20, r=20, t=30, b=10), height=310)
         st.plotly_chart(gauge_graphic, use_container_width=True)
-        
-    st.markdown("### Operational Capital Flow Topography (Sankey Matrix Diagram)")
-    exp_agg = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense'].groupby('Category')['Amount'].sum().reset_index()
-    inc_agg = filtered_ledger[filtered_ledger['Transaction Type'] == 'Income'].groupby('Category')['Amount'].sum().reset_index()
-    
-    nodes_list = ["Total Pipeline Allocation"] + list(inc_agg['Category']) + ["Central Treasury Wallet"] + list(exp_agg['Category']) + ["Preserved Wealth Vault"]
-    sankey_links = []
-    
-    for _, row in inc_agg.iterrows():
-        sankey_links.append({'source': nodes_list.index(row['Category']), 'target': nodes_list.index("Central Treasury Wallet"), 'value': row['Amount']})
-    for _, row in exp_agg.iterrows():
-        sankey_links.append({'source': nodes_list.index("Central Treasury Wallet"), 'target': nodes_list.index(row['Category']), 'value': row['Amount']})
-    if net_savings > 0:
-        sankey_links.append({'source': nodes_list.index("Central Treasury Wallet"), 'target': nodes_list.index("Preserved Wealth Vault"), 'value': net_savings})
-        
-    if sankey_links:
-        sankey_graphic = go.Figure(data=[go.Sankey(
-            node=dict(pad=20, thickness=18, line=dict(color="#0F172A", width=0.3), label=nodes_list, color=COLOR_PRIMARY),
-            link=dict(source=[l['source'] for l in sankey_links], target=[l['target'] for l in sankey_links], value=[l['value'] for l in sankey_links], color="rgba(226, 232, 240, 0.75)")
-        )])
-        sankey_graphic.update_layout(margin=dict(l=10, r=10, t=15, b=15), height=380)
-        st.plotly_chart(sankey_graphic, use_container_width=True)
 
 # --- TAB 2: EXPENSE ANALYTICS ---
 with tab_expense:
@@ -363,23 +316,10 @@ with tab_expense:
             st.markdown("### Structural Distribution Density")
             donut_graphic = px.pie(expense_superset, values='Amount', names='Category', hole=0.55, color_discrete_sequence=px.colors.qualitative.G10)
             st.plotly_chart(donut_graphic, use_container_width=True)
-            
         with view_col_right:
             st.markdown("### Granular Spending Hierarchy")
             treemap_graphic = px.treemap(expense_superset, path=['Category', 'Sub Category'], values='Amount', color='Amount', color_continuous_scale='Purples')
             st.plotly_chart(treemap_graphic, use_container_width=True)
-            
-        st.divider()
-        st.markdown("### Temporal System Outflow Density Matrix")
-        expense_superset = expense_superset.copy()
-        expense_superset['Day of Week'] = expense_superset['Date'].dt.day_name()
-        expense_superset['Calendar Month'] = expense_superset['Date'].dt.strftime('%b %Y')
-        heatmap_matrix = expense_superset.groupby(['Day of Week', 'Calendar Month'])['Amount'].sum().unstack().fillna(0)
-        day_sorting_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        heatmap_matrix = heatmap_matrix.reindex([d for d in day_sorting_order if d in heatmap_matrix.index])
-        
-        heatmap_graphic = px.imshow(heatmap_matrix, labels=dict(x="Chronological Axis", y="Weekly Footprint Matrix", color="Burn Intensity ($)"), color_continuous_scale='YlOrRd')
-        st.plotly_chart(heatmap_graphic, use_container_width=True)
     else:
         st.info("No expense tracking data falls within active filter states.")
 
@@ -392,7 +332,6 @@ with tab_income:
             st.markdown("### Input Vector Contributions")
             income_share_graphic = px.pie(income_superset, values='Amount', names='Income Source', hole=0.4)
             st.plotly_chart(income_share_graphic, use_container_width=True)
-            
         with col_inc_right:
             st.markdown("### Inflow Channels Stack Velocity")
             m_inc_streams = income_superset.groupby([pd.Grouper(key='Date', freq='ME'), 'Income Source'])['Amount'].sum().unstack().fillna(0)
@@ -416,10 +355,6 @@ with tab_budget:
         comparison_bar.add_trace(go.Bar(name='Realized Incurred Capital', x=budget_matrix['Category'], y=budget_matrix['Amount'], marker_color=COLOR_PRIMARY))
         comparison_bar.update_layout(barmode='group', template='plotly_white')
         st.plotly_chart(comparison_bar, use_container_width=True)
-        
-        for _, b_row in budget_matrix.iterrows():
-            if b_row['Utilization %'] > 100.0:
-                st.error(f"**Critical Overrun**: **{b_row['Category']}** exceeded budget tolerances by **{b_row['Utilization %']-100:.1f}%** (-${abs(b_row['Net Variance']):,.2f})")
         st.dataframe(budget_matrix.style.format({'Amount': '${:,.2f}', 'Budget': '${:,.2f}', 'Utilization %': '{:.1f}%', 'Net Variance': '${:,.2f}'}), use_container_width=True)
     else:
         st.info("No historical budget vectors found in standard scope constraints.")
@@ -430,7 +365,6 @@ with tab_savings:
     if not sav_data.empty:
         m_sav_accum = sav_data.groupby(pd.Grouper(key='Date', freq='ME'))['Amount'].sum().reset_index()
         m_sav_accum['Compound Growth Curve'] = m_sav_accum['Amount'].cumsum()
-        
         v_col_l, v_col_r = st.columns([2, 1])
         with v_col_l:
             growth_area_chart = px.area(m_sav_accum, x='Date', y='Compound Growth Curve', color_discrete_sequence=[COLOR_SECONDARY])
@@ -462,49 +396,34 @@ with tab_asset:
 with tab_milestones:
     milestone_aggregates = filtered_ledger[filtered_ledger['Transaction Type'] == 'Savings'].groupby('Goal Name')['Amount'].sum().reset_index()
     milestone_aggregates = milestone_aggregates[milestone_aggregates['Goal Name'] != 'None']
-    
     if not milestone_aggregates.empty:
         capital_target_index = {'Emergency Cash Reserves': 25000, 'Tax Capital Escrow': 15000, 'Venture Deployment Pool': 60000}
         milestone_aggregates['Target Benchmark'] = milestone_aggregates['Goal Name'].map(capital_target_index).fillna(40000)
         milestone_aggregates['Completion Index Ratio'] = (milestone_aggregates['Amount'] / milestone_aggregates['Target Benchmark']) * 100
-        
         for _, milestone_row in milestone_aggregates.iterrows():
             st.markdown(f"#### 🎯 Target: {milestone_row['Goal Name']}")
             st.progress(min(1.0, milestone_row['Completion Index Ratio'] / 100.0))
             st.markdown(f"Secured Allocation: **${milestone_row['Amount']:,.2f}** / Goal Benchmark: **${milestone_row['Target Benchmark']:,.2f}** ({milestone_row['Completion Index Ratio']:.1f}% Fulfilled)")
             st.divider()
     else:
-        st.info("No active investment milestone definitions found in current ledger slices.")
+        st.info("No active investment milestone definitions found.")
 
 # --- TAB 8: PREDICTIVE AI ENGINE ---
 with tab_predictive:
     st.markdown("### 📈 Closed-Form Trend Regression Projections")
     m_burn_series = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense'].groupby(pd.Grouper(key='Date', freq='ME'))['Amount'].sum().reset_index()
-    
     if len(m_burn_series) >= 3:
         m_burn_series['Ordinal_Time_Vector'] = m_burn_series['Date'].map(datetime.date.toordinal)
-        raw_x = m_burn_series['Ordinal_Time_Vector'].values
-        raw_y = m_burn_series['Amount'].values
-        
-        future_ordinals, projected_burns = execute_pure_linear_forecast(raw_x, raw_y, steps_forward=6)
+        future_ordinals, projected_burns = execute_pure_linear_forecast(m_burn_series['Ordinal_Time_Vector'].values, m_burn_series['Amount'].values, steps_forward=6)
         extrapolated_timeline = [datetime.date.fromordinal(int(val)) for val in future_ordinals]
-        
         forecast_graphic = go.Figure()
-        forecast_graphic.add_trace(go.Scatter(x=m_burn_series['Date'], y=raw_y, name='Incurred Burn', line=dict(color=COLOR_PRIMARY, width=3.5)))
+        forecast_graphic.add_trace(go.Scatter(x=m_burn_series['Date'], y=m_burn_series['Amount'].values, name='Incurred Burn', line=dict(color=COLOR_PRIMARY, width=3.5)))
         forecast_graphic.add_trace(go.Scatter(x=extrapolated_timeline, y=projected_burns, name='Trend Forecast', line=dict(color=COLOR_ACCENT, dash='dash', width=3)))
         st.plotly_chart(forecast_graphic, use_container_width=True)
     else:
         st.info("Provide at least 3 months of historical data entries to execute structural line forecasts.")
-        
-    t_inc = filtered_ledger[filtered_ledger['Transaction Type'] == 'Income']['Amount'].sum()
-    t_exp = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense']['Amount'].sum()
-    st.markdown('<div class="ai-insight-panel"><h4>💡 Autonomous Optimization Insights</h4></div>', unsafe_allow_html=True)
-    if t_exp > t_inc:
-        st.markdown("* ⚠️ **Deficit Risk Protocol**: Outflow speeds outpace resource capture profiles. Check non-essential structural burns immediately.")
-    else:
-        st.markdown("* 💎 **Surplus Target Matrix Secured**: Balance sheet profiles display standard system efficiencies.")
 
-# --- TAB 9: DATA SYNC & EXPORT ---
+# --- TAB 9: DATA EXPORT ---
 with tab_export:
     st.dataframe(filtered_ledger, use_container_width=True)
     io_buf = io.StringIO()
