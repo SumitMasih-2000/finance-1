@@ -10,7 +10,7 @@ import io
 # 1. CORE THEME CONFIGURATION & PREMIUM GRAPHIC DESIGN OVERRIDES
 # =====================================================================
 st.set_page_config(
-    page_title="AuraFinance | Intelligence Suite",
+    page_title="Aura",
     page_icon="💎",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -194,13 +194,13 @@ def execute_pure_linear_forecast(x_data, y_data, steps_forward=6):
     return future_x, projected_y
 
 # =====================================================================
-# 4. MUTATED MULTI-FILTER CONTROL SIDEBAR RUNTIME
+# 4. GLOBAL SIDEBAR MULTI-FILTER RUNTIME
 # =====================================================================
-st.sidebar.markdown("<h2 style='color:#2563EB; font-weight:700;'>💎 AuraFinance</h2>", unsafe_allow_html=True)
+st.sidebar.markdown("<h2 style='color:#2563EB; font-weight:700;'>💎 Aura</h2>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='font-size:0.85rem; color:#64748B; margin-top:-10px;'>System Version: 2026.1</p>", unsafe_allow_html=True)
 st.sidebar.divider()
 
-# --- FILTER SECTION 1: GLOBAL DATE SCOPE ---
+# --- FILTER A: DATE CONTROL RANGE ---
 st.sidebar.markdown("### 🗓️ Macro Date Bounds")
 active_ledger = st.session_state['fin_data'].copy()
 absolute_min = active_ledger['Date'].min().to_pydatetime()
@@ -212,22 +212,19 @@ if len(selected_bounds) == 2:
 else:
     filtered_ledger = active_ledger
 
-# --- FILTER SECTION 2: NEW MATRIX ADVANCED CROSS-FILTERS ---
-st.sidebar.markdown("### 🔍 Advanced Data Cross-Filters")
+# --- FILTER B: REGULAR MULTI-SELECT STRATIFICATION MATRIX ---
+st.sidebar.markdown("### 🔍 Advanced Cross-Filters")
 
-# Multi-Select Filter A: Transaction Type
 all_types = list(filtered_ledger['Transaction Type'].unique())
 selected_types = st.sidebar.multiselect("Transaction Types", options=all_types, default=all_types)
 if selected_types:
     filtered_ledger = filtered_ledger[filtered_ledger['Transaction Type'].isin(selected_types)]
 
-# Multi-Select Filter B: Core Ledger Categories
 all_categories = list(filtered_ledger['Category'].unique())
 selected_categories = st.sidebar.multiselect("Isolate Categories", options=all_categories, default=all_categories)
 if selected_categories:
     filtered_ledger = filtered_ledger[filtered_ledger['Category'].isin(selected_categories)]
 
-# Multi-Select Filter C: Strategy Goals Tracker
 all_goals = list(filtered_ledger['Goal Name'].unique())
 selected_goals = st.sidebar.multiselect("Target Milestones Filter", options=all_goals, default=all_goals)
 if selected_goals:
@@ -235,7 +232,7 @@ if selected_goals:
 
 st.sidebar.divider()
 
-# --- FILTER SECTION 3: SYSTEM SYNC ENGINE ---
+# --- FILTER C: EXTERNAL DATA SYNC INTERFACE ---
 st.sidebar.markdown("### 📥 Document Sync Engine")
 uploaded_document = st.sidebar.file_uploader("Upload External Transaction Ledger", type=['csv', 'xlsx'])
 
@@ -274,9 +271,8 @@ def render_kpi_card(title, cash_value, delta_string="", positive_vector=True):
 # =====================================================================
 # 5. DASHBOARD VIEW CONTROLLERS (TAB-BASED DESIGN SYSTEM)
 # =====================================================================
-st.markdown("<h1 style='color:#0F172A; font-weight:700;'>Fintech Operational Command Suite</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:#0F172A; font-weight:700;'>Aura | Financial Command</h1>", unsafe_allow_html=True)
 
-# Use elegant, horizontal workspace selectors instead of hidden vertical listings
 tab_exec, tab_expense, tab_income, tab_budget, tab_savings, tab_asset, tab_milestones, tab_predictive, tab_export = st.tabs([
     "📊 Executive Summary", 
     "💸 Expense Analytics", 
@@ -513,4 +509,4 @@ with tab_export:
     st.dataframe(filtered_ledger, use_container_width=True)
     io_buf = io.StringIO()
     filtered_ledger.to_csv(io_buf, index=False)
-    st.download_button(label="📥 Download Extracted Settlement CSV Ledger", data=io_buf.getvalue().encode('utf-8'), file_name="AuraFinance_Extract.csv", mime="text/csv")
+    st.download_button(label="📥 Download Extracted Settlement CSV Ledger", data=io_buf.getvalue().encode('utf-8'), file_name="Aura_Extract.csv", mime="text/csv")
