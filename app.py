@@ -34,6 +34,15 @@ def inject_premium_css():
             background-color: #F8FAFC;
         }
         
+        /* OVERRIDE THE ORANGE WIDGET HIGHLIGHTS */
+        span[data-baseweb="tag"] {
+            background-color: #2563EB !important;
+            color: #FFFFFF !important;
+        }
+        div[data-baseweb="select"] div {
+            border-color: #CBD5E1;
+        }
+        
         /* Premium Card UI Engineering */
         .kpi-container {
             background: #FFFFFF;
@@ -102,9 +111,6 @@ def inject_premium_css():
         }
     </style>
     """, unsafe_allow_html=True)
-
-inject_premium_css()
-
 # =====================================================================
 # 2. SEED ENGINES & REALISTIC SYNTHETIC LEDGER GENERATOR
 # =====================================================================
