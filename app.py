@@ -6,43 +6,64 @@ import plotly.graph_objects as go
 import datetime
 
 # =====================================================================
-# 1. APPLICATION ARCHITECTURE & TOTAL DESIGN CLONE STYLESHEET
+# 1. APPLICATION ARCHITECTURE & THEME ENGINE CONFIGURATION
 # =====================================================================
 st.set_page_config(
-    page_title="Money T - Dashboard",
+    page_title="Money T - Dashboard Suite",
     page_icon="💰",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-def inject_moneyt_template_theme():
-    """Injects precise design elements to match the exact template layout."""
-    st.markdown("""
+# Initialize state configuration for custom settings
+if 'theme_choice' not in st.session_state:
+    st.session_state['theme_choice'] = "Light Mode"
+
+def inject_theme_engine(theme):
+    """Injects high-fidelity stylesheets to toggle canvas variants layout."""
+    if theme == "Dark Mode":
+        # Corporate Dark Blueprint Theme System Colors
+        bg_canvas = "#0F172A"       # Deep Slate Blue-Gray
+        card_surface = "#1E293B"    # Muted Card Surface
+        text_primary = "#F8FAFC"    # Crisp White Text
+        text_secondary = "#94A3B8"  # Slate Muted Gray
+        border_color = "#334155"    # Subtle Dark Border Line
+        grid_color = "#334155"
+    else:
+        # Template Standard Light Mode Palette Clones
+        bg_canvas = "#F3F4F6"       # Light Grayish-White
+        card_surface = "#FFFFFF"    # Pure White Cards
+        text_primary = "#111114"    # Deep Charcoal
+        text_secondary = "#71717A"  # Cool Gray
+        border_color = "#E4E4E7"    # Thin Border Line
+        grid_color = "#E4E4E7"
+
+    st.markdown(f"""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
         
-        /* Master Main Canvas Settings (Clean Gray-White Canvas) */
-        .stApp {
-            background-color: #F3F4F6 !important;
+        /* Master Main Canvas Settings */
+        .stApp {{
+            background-color: {bg_canvas} !important;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
-        }
+            transition: background-color 0.3s ease;
+        }}
         
-        h1, h2, h3, h4, h5, h6, p, span, label, div, td, th {
+        h1, h2, h3, h4, h5, h6, p, span, label, div, td, th {{
             font-family: 'Plus Jakarta Sans', sans-serif !important;
-        }
+        }}
         
         /* --- SIDEBAR CLONE DESIGN BLOCK (#111114 Dark Charcoal) --- */
-        [data-testid="stSidebar"] {
+        [data-testid="stSidebar"] {{
             background-color: #111114 !important;
             border-right: 1px solid #1E1E24;
             padding-top: 1rem !important;
-        }
-        [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
+        }}
+        [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
             color: #FFFFFF !important;
-        }
+        }}
         
-        /* Sidebar Navigation Items Mockup */
-        .sidebar-nav-item {
+        .sidebar-nav-item {{
             display: flex;
             align-items: center;
             padding: 0.75rem 1rem;
@@ -51,67 +72,42 @@ def inject_moneyt_template_theme():
             color: #A1A1AA;
             font-weight: 500;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-        .sidebar-nav-item.active {
+        }}
+        .sidebar-nav-item.active {{
             background-color: #1F1F23;
             color: #FFFFFF;
-        }
-        .sidebar-nav-item:hover {
-            color: #FFFFFF;
-            background-color: #1A1A1E;
-        }
-        .sidebar-section-lbl {
+        }}
+        .sidebar-section-lbl {{
             font-size: 0.75rem;
             font-weight: 700;
             color: #52525B;
             letter-spacing: 0.08em;
             margin: 1.5rem 0 0.5rem 1rem;
-        }
+        }}
         
-        /* --- HORIZONTAL CONTROLS EXPANDER PANEL --- */
-        .streamlit-expanderHeader {
-            background-color: #FFFFFF !important;
-            border-radius: 12px !important;
-            border: 1px solid #E4E4E7 !important;
-        }
-        .streamlit-expanderContent {
-            background-color: #FFFFFF !important;
-            border: 1px solid #E4E4E7 !important;
-            border-top: none !important;
-            border-radius: 0 0 12px 12px !important;
-            padding: 1rem !important;
-        }
-        
-        /* Multi-Select Pills Override styling */
-        span[data-baseweb="tag"] {
-            background-color: #6366F1 !important; 
-            color: #FFFFFF !important;
-            border-radius: 6px !important;
-        }
-
-        /* --- UI METRIC CARD GRID INHERITANCE --- */
-        .kpi-wrapper {
-            background-color: #FFFFFF;
+        /* --- DYNAMIC METRIC SURFACES --- */
+        .kpi-wrapper {{
+            background-color: {card_surface};
             padding: 1.25rem;
             border-radius: 16px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-            border: 1px solid #E4E4E7;
+            border: 1px solid {border_color};
             min-height: 145px;
-        }
-        .kpi-title {
+            transition: all 0.3s ease;
+        }}
+        .kpi-title {{
             font-size: 0.85rem;
-            color: #71717A;
+            color: {text_secondary};
             font-weight: 500;
-        }
-        .kpi-value {
+        }}
+        .kpi-value {{
             font-size: 2.1rem;
             font-weight: 700;
-            color: #18181B;
+            color: {text_primary};
             margin-top: 0.4rem;
             letter-spacing: -0.04em;
-        }
-        .kpi-badge {
+        }}
+        .kpi-badge {{
             display: inline-flex;
             align-items: center;
             padding: 0.2rem 0.4rem;
@@ -119,86 +115,79 @@ def inject_moneyt_template_theme():
             font-size: 0.72rem;
             font-weight: 600;
             margin-top: 0.6rem;
-        }
-        .badge-inc { background-color: #DCFCE7; color: #16A34A; }
-        .badge-dec { background-color: #FEE2E2; color: #DC2626; }
+        }}
+        .badge-inc {{ background-color: #DCFCE7; color: #16A34A; }}
         
-        /* Match Explicit Borders from Screenshot Layout Template */
-        .border-purple { border-top: 4px solid #6366F1; }
-        .border-orange { border-top: 4px solid #F97316; }
-        .border-teal { border-top: 4px solid #06B6D4; }
-        .border-green { border-top: 4px solid #10B981; }
+        .border-purple {{ border-top: 4px solid #6366F1; }}
+        .border-orange {{ border-top: 4px solid #F97316; }}
+        .border-teal {{ border-top: 4px solid #06B6D4; }}
+        .border-green {{ border-top: 4px solid #10B981; }}
 
-        /* --- CLEAN INTEGRATED TABLE DESIGN MATRIX --- */
-        .custom-table {
+        /* --- CLEAN STREAMLINED TABLE SYSTEMS --- */
+        .custom-table {{
             width: 100%;
             border-collapse: collapse;
-            background-color: #FFFFFF;
+            background-color: {card_surface};
             border-radius: 12px;
             overflow: hidden;
-        }
-        .custom-table th {
+        }}
+        .custom-table th {{
             text-align: left;
             padding: 0.75rem 1rem;
-            background-color: #FAFAFA;
-            color: #71717A;
+            background-color: {card_surface};
+            color: {text_secondary};
             font-weight: 600;
             font-size: 0.8rem;
-            border-bottom: 1px solid #F4F4F5;
-        }
-        .custom-table td {
+            border-bottom: 1px solid {border_color};
+        }}
+        .custom-table td {{
             padding: 0.9rem 1rem;
-            color: #27272A;
+            color: {text_primary};
             font-size: 0.85rem;
-            border-bottom: 1px solid #F4F4F5;
-        }
-        .pill-medium {
+            border-bottom: 1px solid {border_color};
+        }}
+        .pill-medium {{
             padding: 0.25rem 0.6rem;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 600;
-        }
+        }}
         
-        #MainMenu, footer { visibility: hidden; }
+        #MainMenu, footer {{ visibility: hidden; }}
     </style>
     """, unsafe_allow_html=True)
 
-inject_moneyt_template_theme()
-
 # =====================================================================
-# 2. RUNTIME REPLICA LIVE FINANCIAL LEDGER SIMULATOR
+# 2. RUNTIME COMPLETE FINANCIAL DATA ENGINE
 # =====================================================================
 @st.cache_data
 def get_clean_mock_dataset():
-    """Generates precise seed metrics corresponding to dashboard graphical values."""
-    np.random.seed(101)
+    np.random.seed(42)
     today = datetime.date.today()
     date_range = pd.date_range(end=today, periods=30, freq='D')
     
-    income_curve = 400 + 150 * np.sin(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 15, 30)
-    expense_curve = 300 + 120 * np.cos(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 10, 30)
+    # Real-time asset progression trends modeling
+    income_curve = 550 + 120 * np.sin(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 10, 30)
+    expense_curve = 380 + 90 * np.cos(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 8, 30)
     
-    df_trends = pd.DataFrame({
-        'Date': date_range,
-        'Income': income_curve,
-        'Expense': expense_curve
-    })
+    df_trends = pd.DataFrame({'Date': date_range, 'Income': income_curve, 'Expense': expense_curve})
     
-    table_records = [
-        {"Titel": "Dana Schultz", "Date": "22 Sep - 10 AM", "Medium": "Visa", "Color": "#EEF2FF", "Txt": "#4F46E5", "Amount": "$55,022"},
-        {"Titel": "Jassie Moen", "Date": "21 Sep - 10 AM", "Medium": "Paypal", "Color": "#ECFDF5", "Txt": "#059669", "Amount": "$55,022"},
-        {"Titel": "Carroll Emmerich", "Date": "20 Sep - 10 AM", "Medium": "Payoner", "Color": "#FFFBEB", "Txt": "#D97706", "Amount": "$55,022"},
-        {"Titel": "Elaine Dicki", "Date": "19 Sep - 10 AM", "Medium": "Visa", "Color": "#EEF2FF", "Txt": "#4F46E5", "Amount": "$55,022"},
-        {"Titel": "Ray Bergnaum", "Date": "18 Sep - 10 AM", "Medium": "Payoner", "Color": "#FFFBEB", "Txt": "#D97706", "Amount": "$55,022"},
-        {"Titel": "Rose Dickinson", "Date": "17 Sep - 10 AM", "Medium": "Paypal", "Color": "#ECFDF5", "Txt": "#059669", "Amount": "$55,022"}
+    # Granular expense matrix
+    ledger_records = [
+        {"Titel": "Dana Schultz", "Category": "Entertainment", "Medium": "Visa", "Color": "#EEF2FF", "Txt": "#4F46E5", "Amount": 550.00, "Date": "22 Sep - 10 AM"},
+        {"Titel": "Jassie Moen", "Category": "Food & Beverage", "Medium": "Paypal", "Color": "#ECFDF5", "Txt": "#059669", "Amount": 120.00, "Date": "21 Sep - 10 AM"},
+        {"Titel": "Carroll Emmerich", "Category": "Housing", "Medium": "Payoner", "Color": "#FFFBEB", "Txt": "#D97706", "Amount": 2200.00, "Date": "20 Sep - 10 AM"},
+        {"Titel": "Elaine Dicki", "Category": "Digital Shopping", "Medium": "Visa", "Color": "#EEF2FF", "Txt": "#4F46E5", "Amount": 45.00, "Date": "19 Sep - 10 AM"},
+        {"Titel": "Ray Bergnaum", "Category": "Transportation", "Medium": "Payoner", "Color": "#FFFBEB", "Txt": "#D97706", "Amount": 85.00, "Date": "18 Sep - 10 AM"},
+        {"Titel": "Rose Dickinson", "Category": "Healthcare", "Medium": "Paypal", "Color": "#ECFDF5", "Txt": "#059669", "Amount": 310.00, "Date": "17 Sep - 10 AM"}
     ]
-    
-    return df_trends, table_records
+    df_ledger = pd.DataFrame(ledger_records)
+    return df_trends, df_ledger
 
-chart_data, raw_table = get_clean_mock_dataset()
+chart_data, master_ledger = get_clean_mock_dataset()
 
 # =====================================================================
-# 3. SIDEBAR HTML EMBED CLONE LAYER (REMOVED SWITCH TO PRO & GENERAL)
+# 3. SIDEBAR LAYOUT LAYER
 # =====================================================================
 with st.sidebar:
     st.markdown("<h2 style='margin-bottom:0rem; font-weight:700;'>💳 Money T</h2>", unsafe_allow_html=True)
@@ -207,29 +196,47 @@ with st.sidebar:
     st.markdown('<div class="sidebar-section-lbl">MENU</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-nav-item active">🏠 Dashboard</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-nav-item">🔄 Transactions</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item">💳 Card</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-nav-item">📊 Analytics</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-nav-item">⏱️ History</div>', unsafe_allow_html=True)
 
 # =====================================================================
-# 4. TOP MANAGEMENT FILTER EXPANDER SECTION
+# 4. ENGINE CONTROLS, THEME ACCENT PICKER, & EXPENSE CALCULATOR
 # =====================================================================
-st.markdown("<h1 style='color:#111114; font-weight:700; margin-bottom: 0rem;'>Wellcome, Ethan Cole 👋</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color:#71717A; margin-top:0.25rem; margin-bottom:1.5rem;'>360° Financial Visibility Suite Overview Matrix</p>", unsafe_allow_html=True)
+header_col, control_col = st.columns([2, 1])
 
-with st.expander("🎛️ DRILL DOWN SELECTIONS / INTERACTIVE SLICERS", expanded=True):
-    f_col1, f_col2, f_col3 = st.columns(3)
-    with f_col1:
-        date_sel = st.date_input("Timeframe Window Filter", [datetime.date.today() - datetime.timedelta(days=30), datetime.date.today()])
-    with f_col2:
-        cat_choices = ["Housing", "Food & Beverage", "Transportation", "Entertainment", "Digital Shopping"]
-        cat_sel = st.multiselect("Category Select Slicer", options=cat_choices, default=cat_choices)
-    with f_col3:
-        acct_choices = ["Chase Checking", "Amex Platinum", "Fidelity Investment"]
-        acct_sel = st.multiselect("Active Account Filter", options=acct_choices, default=acct_choices)
+with header_col:
+    st.markdown("<h1 style='font-weight:700; margin-bottom: 0rem;'>Wellcome, Ethan Cole 👋</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='margin-top:0.25rem; margin-bottom:1.5rem;'>360° Financial Visibility Suite Overview Matrix</p>", unsafe_allow_html=True)
+
+with control_col:
+    # Color Layout Dynamic Control Slicer
+    theme_choice = st.radio(
+        "Canvas Interface Theme",
+        options=["Light Mode", "Dark Mode"],
+        horizontal=True,
+        index=0 if st.session_state['theme_choice'] == "Light Mode" else 1,
+        key="theme_radio_input"
+    )
+    st.session_state['theme_choice'] = theme_choice
+
+# Initialize Master CSS UI Theme Layer Injector
+inject_theme_engine(st.session_state['theme_choice'])
+is_dark = st.session_state['theme_choice'] == "Dark Mode"
+text_color_code = "#F8FAFC" if is_dark else "#111114"
+grid_color_code = "#334155" if is_dark else "#E4E4E7"
+
+# --- NEW: INTERACTIVE AMOUNT SPENDING SEARCH ENGINE ---
+st.markdown(f"<div style='background-color: {'#1E293B' if is_dark else '#FFFFFF'}; padding:1.25rem; border-radius:14px; border:1px solid {grid_color_code}; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
+st.markdown(f"<h4 style='margin:0 0 0.5rem 0; font-weight:700; color:{text_color_code};'>🔍 Dynamic Expense Tracker Slicer</h4>", unsafe_allow_html=True)
+target_amount = st.number_input("Enter a threshold amount to review exactly where and how much you spent ($):", min_value=0.0, value=500.0, step=10.0)
+
+# Apply runtime logical threshold calculations
+filtered_ledger = master_ledger[master_ledger['Amount'] <= target_amount]
+total_filtered_spend = filtered_ledger['Amount'].sum()
+st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================================
-# 5. DYNAMIC DESIGN METRIC CARDS (MATCHES TOP ACCENT BORDERS)
+# 5. DYNAMIC DESIGN METRIC CARDS
 # =====================================================================
 kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
 
@@ -238,34 +245,34 @@ with kpi_col1:
     <div class="kpi-wrapper border-purple">
         <div class="kpi-title">Total Income</div>
         <div class="kpi-value">$8,500</div>
-        <div class="kpi-badge badge-inc">▲ 35% Increased form last month</div>
+        <div class="kpi-badge badge-inc">▲ 35% Base Yield</div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi_col2:
     st.markdown(f"""
     <div class="kpi-wrapper border-orange">
-        <div class="kpi-title">Total Spending</div>
-        <div class="kpi-value">$3,500</div>
-        <div class="kpi-badge badge-inc">▲ 75% Increased form last month</div>
+        <div class="kpi-title">Calculated Spending Target Filter</div>
+        <div class="kpi-value">${total_filtered_spend:,.2f}</div>
+        <div class="kpi-badge badge-inc" style="background-color:#E0F2FE; color:#0369A1;">⚙️ Under Max Threshold</div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi_col3:
     st.markdown(f"""
     <div class="kpi-wrapper border-teal">
-        <div class="kpi-title">Spending Goal</div>
+        <div class="kpi-title">Spending Goal Limit</div>
         <div class="kpi-value">$9,254</div>
-        <div class="kpi-badge badge-inc">▲ 15% Increased form last month</div>
+        <div class="kpi-badge badge-inc">▲ 15% Cap Buffer</div>
     </div>
     """, unsafe_allow_html=True)
 
 with kpi_col4:
     st.markdown(f"""
     <div class="kpi-wrapper border-green">
-        <div class="kpi-title">Total Transactions</div>
-        <div class="kpi-value">$17,000</div>
-        <div class="kpi-badge badge-inc">▲ 85% Increased form last month</div>
+        <div class="kpi-title">Active Logged Items</div>
+        <div class="kpi-value">{len(filtered_ledger)} / {len(master_ledger)}</div>
+        <div class="kpi-badge badge-inc">🎯 Records Matched</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -276,104 +283,86 @@ def format_chart_layout(fig):
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color="#111114", family="Plus Jakarta Sans"),
+        font=dict(color=text_color_code, family="Plus Jakarta Sans"),
         margin=dict(l=20, r=20, t=20, b=20),
         hovermode="x unified"
     )
     if hasattr(fig, 'update_xaxes'):
-        fig.update_xaxes(showgrid=True, gridcolor="#E4E4E7", tickfont=dict(color="#71717A"))
-        fig.update_yaxes(showgrid=True, gridcolor="#E4E4E7", tickfont=dict(color="#71717A"))
+        fig.update_xaxes(showgrid=True, gridcolor=grid_color_code, tickfont=dict(color=text_color_code))
+        fig.update_yaxes(showgrid=True, gridcolor=grid_color_code, tickfont=dict(color=text_color_code))
 
 # =====================================================================
-# 6. CENTRAL ANALYTICS GRID METRICS (ASSETS CURVE & GAUGES)
+# 6. CENTRAL ANALYTICS GRID METRICS
 # =====================================================================
 body_col_left, body_col_right = st.columns([2, 1])
 
 with body_col_left:
     # Asset Progress Graph Block
-    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#111114;'>Your Assets</h4>", unsafe_allow_html=True)
+    st.markdown(f"<div style='background-color:{'#1E293B' if is_dark else '#FFFFFF'}; padding:1.5rem; border-radius:16px; border:1px solid {grid_color_code};'>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='margin:0 0 1rem 0; font-weight:700; color:{text_color_code};'>Your Assets Progression</h4>", unsafe_allow_html=True)
     
     asset_fig = go.Figure()
     asset_fig.add_trace(go.Scatter(
         x=chart_data['Date'], y=chart_data['Income'], 
-        name='Income', mode='lines', line=dict(color='#10B981', width=4.5),
+        name='Income Outflows', mode='lines', line=dict(color='#10B981', width=4.5),
         fill='tozeroy', fillcolor='rgba(16, 185, 129, 0.03)'
     ))
     asset_fig.add_trace(go.Scatter(
         x=chart_data['Date'], y=chart_data['Expense'], 
-        name='Expense', mode='lines', line=dict(color='#F97316', width=4),
+        name='Expense Outflows', mode='lines', line=dict(color='#F97316', width=4),
         fill='tozeroy', fillcolor='rgba(249, 115, 22, 0.03)'
     ))
     
     format_chart_layout(asset_fig)
-    asset_fig.update_layout(legend=dict(orientation="h", y=1.1, x=0.7))
+    asset_fig.update_layout(legend=dict(orientation="h", y=1.1, x=0.6, font=dict(color=text_color_code)))
     st.plotly_chart(asset_fig, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Custom HTML Table Component Clone (Latest Transactions)
-    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-    st.markdown("<div style='display:flex; justify-content:between; align-items:center; margin-bottom:1rem;'><h4 style='margin:0; font-weight:700; color:#111114;'>Latest Transaction</h4><span style='color:#6366F1; font-size:0.85rem; font-weight:600; cursor:pointer;'>See All</span></div>", unsafe_allow_html=True)
+    # Custom HTML Table Component Clone (Where and how much was spent)
+    st.markdown(f"<div style='background-color:{'#1E293B' if is_dark else '#FFFFFF'}; padding:1.5rem; border-radius:16px; border:1px solid {grid_color_code};'>", unsafe_allow_html=True)
+    st.markdown(f"<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;'><h4 style='margin:0; font-weight:700; color:{text_color_code};'>Dynamic Expense Breakdown Engine</h4></div>", unsafe_allow_html=True)
     
-    table_html = "<table class='custom-table'><thead><tr><th>Titel</th><th>Date</th><th>Medium</th><th>Amount</th></tr></thead><tbody>"
-    for row in raw_table:
-        table_html += f"""
-        <tr>
-            <td style='font-weight:600;'>👤 {row['Titel']}</td>
-            <td style='color:#71717A;'>{row['Date']}</td>
-            <td><span class='pill-medium' style='background-color:{row['Color']}; color:{row['Txt']};'>{row['Medium']}</span></td>
-            <td style='font-weight:700; color:#111114;'>🪙 {row['Amount']}</td>
-        </tr>
-        """
-    table_html += "</tbody></table>"
-    st.markdown(table_html, unsafe_allow_html=True)
+    if not filtered_ledger.empty:
+        table_html = f"<table class='custom-table'><thead><tr style='background-color: {'#334155' if is_dark else '#FAFAFA'};'><th>Recipient</th><th>Category Pool</th><th>Method</th><th>Total Cost</th></tr></thead><tbody>"
+        for _, row in filtered_ledger.iterrows():
+            table_html += f"""
+            <tr>
+                <td style='font-weight:600;'>👤 {row['Titel']}</td>
+                <td style='font-weight:500;'>📂 {row['Category']}</td>
+                <td><span class='pill-medium' style='background-color:{row['Color']}; color:{row['Txt']};'>{row['Medium']}</span></td>
+                <td style='font-weight:700; color: #EF4444;'>-${row['Amount']:,.2f}</td>
+            </tr>
+            """
+        table_html += "</tbody></table>"
+        st.markdown(table_html, unsafe_allow_html=True)
+    else:
+        st.markdown("<p style='color:#EF4444; font-weight:600;'>No items found costing less than or equal to the filtered selection value.</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with body_col_right:
-    # Credit Card Render Mockup Block
-    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#111114;'>My Cards</h4>", unsafe_allow_html=True)
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #6366F1 0%, #4338CA 100%); padding: 1.5rem; border-radius: 14px; color: white; position: relative; min-height:160px; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);">
-        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8;">Debit Card</div>
-        <div style="font-size: 1.4rem; font-weight: 700; margin-top: 1.5rem; letter-spacing: 0.05em;">•••• •••• •••• 0124</div>
-        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem; font-size: 0.8rem;">
-            <div>
-                <div style="opacity: 0.6; font-size: 0.65rem; text-transform: uppercase;">Holder</div>
-                <div style="font-weight: 600;">Ethan Cole</div>
-            </div>
-            <div>
-                <div style="opacity: 0.6; font-size: 0.65rem; text-transform: uppercase;">Expires</div>
-                <div style="font-weight: 600;">12/28</div>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown("<br><button style='width:100%; padding:0.6rem; border-radius:10px; border:1px dashed #CBD5E1; background:transparent; color:#71717A; font-weight:600; cursor:pointer;'>+ Add new card</button>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Half Donut / Gauge Arc Transaction View Block
+    st.markdown(f"<div style='background-color:{'#1E293B' if is_dark else '#FFFFFF'}; padding:1.5rem; border-radius:16px; border:1px solid {grid_color_code}; min-height:430px;'>", unsafe_allow_html=True)
+    st.markdown(f"<div style='display:flex; justify-content:space-between;'><span style='font-weight:700; color:{text_color_code};'>Operational Metrics</span></div>", unsafe_allow_html=True)
     
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Half Donut/Gauge Arc Transaction View Block
-    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-    st.markdown("<div style='display:flex; justify-content:between;'><span style='font-weight:700; color:#111114;'>Transaction View</span><span style='font-weight:700; color:#111114;'>$55,501</span></div>", unsafe_allow_html=True)
-    
-    gauge_fig = go.Figure(go.Pie(
-        values=[45, 35, 20],
-        labels=['Transaction View', 'Sales', 'Payment'],
-        hole=0.7,
-        rotation=90,
-        direction='clockwise',
-        marker=dict(colors=['#6366F1', '#10B981', '#D97706']),
-        textinfo='none'
-    ))
-    format_chart_layout(gauge_fig)
-    gauge_fig.update_layout(
-        showlegend=True, 
-        legend=dict(orientation="h", y=-0.1, x=-0.1),
-        annotations=[dict(text='$55,501<br><span style="font-size:0.75rem; color:#10B981;">▲ 20% Growth</span>', x=0.5, y=0.5, font_size=20, font_weight="bold", showarrow=False)]
-    )
-    st.plotly_chart(gauge_fig, use_container_width=True)
+    if not filtered_ledger.empty:
+        cat_group = filtered_ledger.groupby('Category')['Amount'].sum().reset_index()
+        gauge_fig = go.Figure(go.Pie(
+            values=cat_group['Amount'],
+            labels=cat_group['Category'],
+            hole=0.7,
+            rotation=90,
+            direction='clockwise',
+            textinfo='none'
+        ))
+        format_chart_layout(gauge_fig)
+        gauge_fig.update_layout(
+            showlegend=True, 
+            legend=dict(orientation="h", y=-0.1, x=-0.1, font=dict(color=text_color_code)),
+            annotations=[dict(text=f'${total_filtered_spend:,.0f}<br><span style="font-size:0.75rem; color:#10B981;">Active Volume</span>', x=0.5, y=0.5, font_size=16, font_weight="bold", showarrow=False, font_color=text_color_code)]
+        )
+        st.plotly_chart(gauge_fig, use_container_width=True)
+    else:
+        st.markdown("<p style='text-align:center; padding-top:4rem; color:#71717A;'>Waiting for filter values...</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
