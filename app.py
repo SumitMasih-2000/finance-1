@@ -7,431 +7,422 @@ import datetime
 import io
 
 # =====================================================================
-# 1. CORE THEME CONFIGURATION & PREMIUM GRAPHIC DESIGN OVERRIDES
+# 1. APPLICATION ARCHITECTURE & PREMIUM ENHANCED CSS OVERRIDES
 # =====================================================================
 st.set_page_config(
-    page_title="Aura",
+    page_title="Aura Core",
     page_icon="💎",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Professional FinTech Palette Configuration
-COLOR_PRIMARY = "#2563EB"    # Blue
-COLOR_SECONDARY = "#10B981"  # Green
-COLOR_ACCENT = "#F59E0B"     # Gold
-COLOR_DANGER = "#EF4444"     # Red
-COLOR_MUTED = "#64748B"      # Gray
+# Enterprise Color Engine Design Guidelines
+COLOR_PRIMARY = "#1E40AF"    # Slate Blue
+COLOR_SECONDARY = "#0D9488"  # Teal
+COLOR_ACCENT = "#F59E0B"     # Amber
+COLOR_DANGER = "#DC2626"     # Crimson
+COLOR_MUTED = "#64748B"      # Muted Slate Grey
 
-def inject_premium_css():
-    """Injects commercial grade structural layout styling mimicking premium platforms."""
+def inject_enterprise_theme():
+    """Forces structural DOM updates to override Streamlit default orange 
+    with a premium enterprise design layout."""
     st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
         html, body, [class*="css"] {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #F8FAFC;
         }
         
-        /* OVERRIDE THE ORANGE WIDGET HIGHLIGHTS */
+        /* ZERO-CONFIG THEME SYSTEM OVERRIDE (Goodbye Orange) */
         span[data-baseweb="tag"] {
-            background-color: #2563EB !important;
+            background-color: #1E40AF !important;
             color: #FFFFFF !important;
+            border-radius: 6px !important;
         }
         div[data-baseweb="select"] div {
-            border-color: #CBD5E1;
+            border-color: #E2E8F0 !important;
+        }
+        button[data-baseweb="tab"] {
+            color: #64748B !important;
+            font-weight: 500 !important;
+        }
+        button[data-baseweb="tab"][aria-selected="true"] {
+            color: #1E40AF !important;
+            border-bottom-color: #1E40AF !important;
+            font-weight: 600 !important;
         }
         
         /* Premium Card UI Engineering */
         .kpi-container {
             background: #FFFFFF;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.04), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
             border: 1px solid #E2E8F0;
             margin-bottom: 1rem;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease-in-out;
         }
-        
         .kpi-container:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
             border-color: #CBD5E1;
         }
-        
         .kpi-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #64748B;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.07em;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
         }
-        
         .kpi-val {
-            font-size: 1.85rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: #0F172A;
             letter-spacing: -0.02em;
         }
-        
         .kpi-subtext {
-            font-size: 0.85rem;
-            margin-top: 0.6rem;
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
             font-weight: 500;
-            display: flex;
-            align-items: center;
         }
+        .status-up { color: #0D9488; }
+        .status-down { color: #DC2626; }
         
-        .status-up { color: #10B981; }
-        .status-down { color: #EF4444; }
-        
-        /* AI Panel Styling */
-        .ai-insight-panel {
-            background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
-            border-left: 6px solid #10B981;
-            padding: 1.5rem;
-            border-radius: 14px;
-            margin-bottom: 1.25rem;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.06);
-        }
-        
-        /* Clean Interface Utilities */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
-        
-        /* Custom Styling for the Filter Section Header */
-        .filter-banner {
-            background-color: #FFFFFF;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid #E2E8F0;
-            margin-bottom: 1rem;
-        }
     </style>
     """, unsafe_allow_html=True)
+
+inject_enterprise_theme()
+
 # =====================================================================
-# 2. SEED ENGINES & REALISTIC SYNTHETIC LEDGER GENERATOR
+# 2. SEED ENGINES & COMPREHENSIVE MULTIDIMENSIONAL DATA GENERATOR
 # =====================================================================
 @st.cache_data
-def generate_synthetic_ledger():
-    np.random.seed(101)
+def generate_360_financial_ledger():
+    """Generates an enhanced multi-dimensional transactional ledger mirroring enterprise logging metrics."""
+    np.random.seed(42)
     today = datetime.date.today()
     start_time = today - datetime.timedelta(days=365)
     date_series = pd.date_range(start_time, today, freq='D')
     
     ledger_records = []
-    income_streams = ['Corporate Salary', 'Consulting Advisory', 'Equity Dividends']
+    
+    accounts = ['Chase Checking', 'Amex Platinum', 'Fidelity Investment', 'Apple Cash']
+    payment_methods = ['Credit Card', 'ACH Transfer', 'Debit Card', 'Digital Wallet']
+    priorities = ['High', 'Medium', 'Low']
+    statuses = ['Settled', 'Pending', 'Disputed']
+    
+    income_map = {
+        'Corporate Salary': ['Chase Checking', 'High', 'Settled'],
+        'Consulting Advisory': ['Chase Checking', 'Medium', 'Settled'],
+        'Equity Dividends': ['Fidelity Investment', 'Low', 'Settled']
+    }
+    
     expense_universe = {
         'Housing': ['Mortgage Service', 'Grid Utilities', 'Property Management'],
         'Food & Beverage': ['Wholesale Groceries', 'Premium Dining', 'Delivery Apps'],
         'Transportation': ['Auto Insurance', 'Fuel Station', 'Ride Share Platforms'],
-        'Entertainment': ['Streaming Subscriptions', 'Live Events', 'Gaming Ecosystems'],
+        'Entertainment': ['Subscriptions', 'Live Events', 'Gaming Ecosystems'],
         'Digital Shopping': ['Apparel', 'High-Tech Gear', 'Home Aesthetics'],
         'Healthcare': ['Premium Coverage', 'Pharmacy Cleared', 'Clinical Consultation']
     }
-    investment_vehicles = ['Global Indices Equities', 'Crypto Assets Portfolio', 'Real Estate Trusts', 'Treasury Instruments']
-    saving_milestones = ['Emergency Cash Reserves', 'Tax Capital Escrow', 'Venture Deployment Pool']
     
-    for current_date in date_series:
+    for idx, current_date in enumerate(date_series):
+        # Monthly Recurring Income Execution
         if current_date.day == 1:
-            ledger_records.append([current_date, 'Income', 'Salary', 'Corporate Salary', 'Primary Institutional Allocation', 7200.00, 'Corporate Salary', 0, 'None', 'None'])
-        if current_date.day == 15 and np.random.rand() > 0.4:
-            ledger_records.append([current_date, 'Income', 'Consulting', 'Consulting Advisory', 'Strategic Milestone Advisory Payment', np.random.uniform(1200, 2600), 'Consulting Advisory', 0, 'None', 'None'])
-        if current_date.day == 26 and current_date.month % 3 == 0:
-            ledger_records.append([current_date, 'Income', 'Capital Yields', 'Equity Dividends', 'Quarterly Portfolio Dividend Matrix payout', np.random.uniform(350, 750), 'Equity Dividends', 0, 'None', 'None'])
+            ledger_records.append([
+                current_date, 'Income', 'Salary', 'Corporate Salary', 7500.00,
+                'Chase Checking', 'ACH Transfer', 'High', 'Settled', 'Yes'
+            ])
+        if current_date.day == 15 and np.random.rand() > 0.5:
+            ledger_records.append([
+                current_date, 'Income', 'Consulting', 'Consulting Advisory', np.random.uniform(1500, 3000),
+                'Chase Checking', 'ACH Transfer', 'Medium', 'Settled', 'No'
+            ])
+        if current_date.day == 28 and current_date.month % 3 == 0:
+            ledger_records.append([
+                current_date, 'Income', 'Capital Yields', 'Equity Dividends', np.random.uniform(400, 900),
+                'Fidelity Investment', 'ACH Transfer', 'Low', 'Settled', 'No'
+            ])
             
+        # Standard Operating Structural Expenditures
         if current_date.day == 2:
-            ledger_records.append([current_date, 'Expense', 'Housing', 'Mortgage Service', 'Primary Residential Mortgage Debt Settlement', 2100.00, 'None', 2100.00, 'None', 'None'])
-            ledger_records.append([current_date, 'Expense', 'Housing', 'Grid Utilities', 'Municipal Power, Water, Fiber Optic Network Matrix', 240.00, 'None', 250.00, 'None', 'None'])
+            ledger_records.append([
+                current_date, 'Expense', 'Housing', 'Mortgage Service', 2200.00,
+                'Chase Checking', 'ACH Transfer', 'High', 'Settled', 'Yes'
+            ])
+            ledger_records.append([
+                current_date, 'Expense', 'Housing', 'Grid Utilities', np.random.uniform(180, 290),
+                'Amex Platinum', 'Credit Card', 'High', 'Settled', 'Yes'
+            ])
             
-        if np.random.rand() > 0.25:
+        # Daily Dynamic Lifestyle Fluctuations
+        if np.random.rand() > 0.2:
             selected_cat = np.random.choice(list(expense_universe.keys()))
             selected_sub = np.random.choice(expense_universe[selected_cat])
-            processed_amount = np.round(np.random.exponential(scale=42.0) + 6.50, 2)
-            target_budget = 650.00 if selected_cat in ['Food & Beverage', 'Digital Shopping'] else 350.00
-            ledger_records.append([current_date, 'Expense', selected_cat, selected_sub, f"Settlement transaction descriptor to {selected_sub}", processed_amount, 'None', target_budget, 'None', 'None'])
+            processed_amount = np.round(np.random.exponential(scale=45.0) + 5.00, 2)
             
-        if current_date.day == 5:
-            asset_target = np.random.choice(investment_vehicles)
-            capital_volume = np.random.uniform(600, 1500)
-            ledger_records.append([current_date, 'Investment', 'Asset Allocation', asset_target, f"Capital Conversion -> {asset_target}", capital_volume, 'None', 0, asset_target, 'None'])
+            # Contextual Assignment Matrix logic
+            assigned_acct = np.random.choice(accounts)
+            assigned_pay = 'Credit Card' if 'Amex' in assigned_acct else np.random.choice(payment_methods)
+            assigned_prior = np.random.choice(priorities)
+            assigned_status = np.random.choice(statuses, p=[0.92, 0.06, 0.02])
+            is_recurring = 'Yes' if np.random.rand() > 0.85 else 'No'
             
-        if current_date.day == 10:
-            milestone_target = np.random.choice(saving_milestones)
-            saving_volume = np.random.uniform(300, 800)
-            ledger_records.append([current_date, 'Savings', 'Capital Preservation', milestone_target, f"Vault Escrow Transfer -> {milestone_target}", saving_volume, 'None', 0, 'None', milestone_target])
+            ledger_records.append([
+                current_date, 'Expense', selected_cat, selected_sub, processed_amount,
+                assigned_acct, assigned_pay, assigned_prior, assigned_status, is_recurring
+            ])
 
     output_frame = pd.DataFrame(ledger_records, columns=[
-        'Date', 'Transaction Type', 'Category', 'Sub Category', 
-        'Description', 'Amount', 'Income Source', 'Budget', 'Investment Type', 'Goal Name'
+        'Date', 'Transaction Type', 'Category', 'Sub Category', 'Amount',
+        'Account', 'Payment Method', 'Priority', 'Status', 'Recurring'
     ])
     output_frame['Date'] = pd.to_datetime(output_frame['Date'])
+    # Setup baseline assigned target budgets inside mapping
+    budget_allocations = {
+        'Housing': 2600.00, 'Food & Beverage': 800.00, 'Transportation': 400.00,
+        'Entertainment': 350.00, 'Digital Shopping': 600.00, 'Healthcare': 300.00,
+        'Salary': 0.0, 'Consulting': 0.0, 'Capital Yields': 0.0
+    }
+    output_frame['Assigned Budget'] = output_frame['Category'].map(budget_allocations)
     return output_frame
 
-if 'fin_data' not in st.session_state:
-    st.session_state['fin_data'] = generate_synthetic_ledger()
-
-def execute_pure_linear_forecast(x_data, y_data, steps_forward=6):
-    n = len(x_data)
-    if n < 2: return np.array([]), np.array([])
-    x, y = np.array(x_data, dtype=float), np.array(y_data, dtype=float)
-    x_mean, y_mean = np.mean(x), np.mean(y)
-    numerator = np.sum((x - x_mean) * (y - y_mean))
-    denominator = np.sum((x - x_mean) ** 2)
-    slope = 0 if denominator == 0 else numerator / denominator
-    intercept = y_mean - (slope * x_mean)
-    future_x = np.array([x[-1] + (i * 30.4) for i in range(1, steps_forward + 1)])
-    return future_x, intercept + (slope * future_x)
+if 'fin_ledger' not in st.session_state:
+    st.session_state['fin_ledger'] = generate_360_financial_ledger()
 
 # =====================================================================
-# 3. SIDEBAR STRUCTURE (CLEAN, MINIMALIST UTILITIES ONLY)
+# 3. INTERACTIVE MULTIPLE SLICERS ENGINE (QUICK FILTER BAR)
 # =====================================================================
-st.sidebar.markdown("<h2 style='color:#2563EB; font-weight:700;'>💎 Aura</h2>", unsafe_allow_html=True)
-st.sidebar.markdown("<p style='font-size:0.85rem; color:#64748B; margin-top:-10px;'>System Version: 2026.1</p>", unsafe_allow_html=True)
-st.sidebar.divider()
+raw_ledger = st.session_state['fin_ledger'].copy()
 
-st.sidebar.markdown("### 📥 Document Sync Engine")
-uploaded_document = st.sidebar.file_uploader("Upload External Ledger", type=['csv', 'xlsx'])
-if uploaded_document is not None:
-    try:
-        imported_df = pd.read_csv(uploaded_document) if uploaded_document.name.endswith('.csv') else pd.read_excel(uploaded_document)
-        imported_df['Date'] = pd.to_datetime(imported_df['Date'])
-        st.session_state['fin_data'] = imported_df
-        st.sidebar.success("Database engine synchronized.")
-    except Exception as e:
-        st.sidebar.error(f"Sync Fault: {str(e)}")
-
-search_term = st.sidebar.text_input("📝 Search Line-Item Descriptors", "")
-
-# =====================================================================
-# 4. MAIN PAGE ENGINE & PROFESSIONAL HORIZONTAL FILTER BAR
-# =====================================================================
-st.markdown("<h1 style='color:#0F172A; font-weight:700; margin-bottom: 0.2rem;'>Aura | Financial Command</h1>", unsafe_allow_html=True)
-
-# THE NEW WAY: Horizontal Enterprise Filtering Toolbar
-with st.expander("🎛️  Database Filters & Analysis Parameters", expanded=True):
-    # Setup 4 distinct tracking columns side-by-side
-    f_col1, f_col2, f_col3, f_col4 = st.columns(4)
+with st.expander("🎛️ GLOBAL CONTROL SLICERS - ANALYTIC PARAMETERS", expanded=True):
+    col_date, col_cat, col_acct, col_pay = st.columns(4)
     
-    active_ledger = st.session_state['fin_data'].copy()
-    
-    with f_col1:
-        absolute_min = active_ledger['Date'].min().to_pydatetime()
-        absolute_max = active_ledger['Date'].max().to_pydatetime()
-        selected_bounds = st.date_input("Analysis Window", [absolute_min, absolute_max], min_value=absolute_min, max_value=absolute_max)
-        if len(selected_bounds) == 2:
-            filtered_ledger = active_ledger[(active_ledger['Date'] >= pd.to_datetime(selected_bounds[0])) & (active_ledger['Date'] <= pd.to_datetime(selected_bounds[1]))]
+    with col_date:
+        abs_min = raw_ledger['Date'].min().to_pydatetime()
+        abs_max = raw_ledger['Date'].max().to_pydatetime()
+        selected_window = st.date_input("Time Period Window", [abs_min, abs_max], min_value=abs_min, max_value=abs_max)
+        if len(selected_window) == 2:
+            runtime_ledger = raw_ledger[(raw_ledger['Date'] >= pd.to_datetime(selected_window[0])) & (raw_ledger['Date'] <= pd.to_datetime(selected_window[1]))]
         else:
-            filtered_ledger = active_ledger
+            runtime_ledger = raw_ledger
+            
+    with col_cat:
+        cat_choices = list(runtime_ledger['Category'].unique())
+        selected_cats = st.multiselect("Drilldown Categories", options=cat_choices, default=cat_choices)
+        if selected_cats:
+            runtime_ledger = runtime_ledger[runtime_ledger['Category'].isin(selected_cats)]
+            
+    with col_acct:
+        acct_choices = list(runtime_ledger['Account'].unique())
+        selected_accts = st.multiselect("Isolate Accounts", options=acct_choices, default=acct_choices)
+        if selected_accts:
+            runtime_ledger = runtime_ledger[runtime_ledger['Account'].isin(selected_accts)]
+            
+    with col_pay:
+        pay_choices = list(runtime_ledger['Payment Method'].unique())
+        selected_pays = st.multiselect("Payment Methods", options=pay_choices, default=pay_choices)
+        if selected_pays:
+            runtime_ledger = runtime_ledger[runtime_ledger['Payment Method'].isin(selected_pays)]
 
-    with f_col2:
-        all_types = list(filtered_ledger['Transaction Type'].unique())
-        selected_types = st.multiselect("Transaction Types", options=all_types, default=all_types)
-        if selected_types:
-            filtered_ledger = filtered_ledger[filtered_ledger['Transaction Type'].isin(selected_types)]
+# =====================================================================
+# 4. RUNTIME SYSTEM CALCULATIONS & CORE KPI DATA AGGREGATIONS
+# =====================================================================
+val_income = runtime_ledger[runtime_ledger['Transaction Type'] == 'Income']['Amount'].sum()
+val_expense = runtime_ledger[runtime_ledger['Transaction Type'] == 'Expense']['Amount'].sum()
+val_net_flow = val_income - val_expense
+val_savings = val_net_flow if val_net_flow > 0 else 0.0  # Surplus baseline logic
+val_total_records = len(runtime_ledger)
 
-    with f_col3:
-        all_categories = list(filtered_ledger['Category'].unique())
-        selected_categories = st.multiselect("Isolate Categories", options=all_categories, default=all_categories)
-        if selected_categories:
-            filtered_ledger = filtered_ledger[filtered_ledger['Category'].isin(selected_categories)]
-
-    with f_col4:
-        all_goals = list(filtered_ledger['Goal Name'].unique())
-        selected_goals = st.multiselect("Target Milestones", options=all_goals, default=all_goals)
-        if selected_goals:
-            filtered_ledger = filtered_ledger[filtered_ledger['Goal Name'].isin(selected_goals)]
-
-if search_term:
-    filtered_ledger = filtered_ledger[
-        filtered_ledger['Description'].str.contains(search_term, case=False, na=False) |
-        filtered_ledger['Category'].str.contains(search_term, case=False, na=False)
-    ]
-
-def render_kpi_card(title, cash_value, delta_string="", positive_vector=True):
-    trend_class = "status-up" if positive_vector else "status-down"
-    vector_symbol = "▲" if positive_vector else "▼"
-    delta_markup = f'<div class="kpi-subtext {trend_class}">{vector_symbol} {delta_string}</div>' if delta_string else ''
+def render_kpi(label, formatted_val, dynamic_subtext="", is_positive=True):
+    subtext_color = "status-up" if is_positive else "status-down"
+    indicator = "▲" if is_positive else "▼"
+    subtext_markup = f'<div class="kpi-subtext {subtext_color}">{indicator} {dynamic_subtext}</div>' if dynamic_subtext else ''
     st.markdown(f"""
     <div class="kpi-container">
-        <div class="kpi-label">{title}</div>
-        <div class="kpi-val">{cash_value}</div>
-        {delta_markup}
+        <div class="kpi-label">{label}</div>
+        <div class="kpi-val">{formatted_val}</div>
+        {subtext_markup}
     </div>
     """, unsafe_allow_html=True)
 
+# Top Bar Metric Viewport
+kpi_col1, kpi_col2, kpi_col3, kpi_col4, kpi_col5 = st.columns(5)
+with kpi_col1: render_kpi("Total Income", f"${val_income:,.2f}", "Verified Ecosystem Inflows", True)
+with kpi_col2: render_kpi("Total Expenses", f"${val_expense:,.2f}", "Structural Balance Sheet Debits", False)
+with kpi_col3: render_kpi("Net Cash Flow", f"${val_net_flow:,.2f}", "Operating Margin Delta", val_net_flow >= 0)
+with kpi_col4: render_kpi("Total Savings Pool", f"${val_savings:,.2f}", "Capital Escrow Preservation", True)
+with kpi_col5: render_kpi("Total Records", f"{val_total_records:,}", "Line Transactions Parsed", True)
+
+st.divider()
+
 # =====================================================================
-# 5. TAB-BASED ANALYTICS VIEWPORTS
+# 5. THE 5 INTERACTIVE DASHBOARD PAGES ARCHITECTURE
 # =====================================================================
-tab_exec, tab_expense, tab_income, tab_budget, tab_savings, tab_asset, tab_milestones, tab_predictive, tab_export = st.tabs([
-    "📊 Executive Summary", "💸 Expense Analytics", "📈 Inflow Channels", "🛡️ Budget Constraints", 
-    "🏦 Savings Vaults", "💼 Asset Allocation", "🎯 Goal Tracks", "🧠 Predictive AI Engine", "💾 Data Export"
+page_overview, page_spending, page_income, page_budget, page_status = st.tabs([
+    "📊 1. Overview Suite",
+    "💸 2. Spending Analysis",
+    "📈 3. Income Tracking",
+    "🛡️ 4. Budget Review",
+    "🎯 5. Transaction Status"
 ])
 
-# --- TAB 1: EXECUTIVE SUMMARY ---
-with tab_exec:
-    gross_income = filtered_ledger[filtered_ledger['Transaction Type'] == 'Income']['Amount'].sum()
-    gross_expenses = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense']['Amount'].sum()
-    gross_investments = filtered_ledger[filtered_ledger['Transaction Type'] == 'Investment']['Amount'].sum()
-    net_savings = gross_income - gross_expenses
-    savings_ratio = (net_savings / gross_income * 100) if gross_income > 0 else 0.0
-    calculated_net_worth = gross_income + gross_investments - gross_expenses
-    financial_health_index = int(max(10, min(100, (savings_ratio * 1.3) + (65 if gross_expenses < gross_income else 15))))
+# --- PAGE 1: OVERVIEW SUITE ---
+with page_overview:
+    st.markdown("### 360° Financial Visibility Overview")
+    ov_col_left, ov_col_right = st.columns([2, 1])
     
-    kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
-    with kpi_col1: render_kpi_card("Total Verified Income", f"${gross_income:,.2f}", "4.8% upward velocity", True)
-    with kpi_col2: render_kpi_card("System Structural Burn", f"${gross_expenses:,.2f}", "0.9% optimized baseline", True)
-    with kpi_col3: render_kpi_card("Net Capital Retained", f"${net_savings:,.2f}", f"Savings Rate: {savings_ratio:.1f}%", savings_ratio >= 20.0)
-    with kpi_col4: render_kpi_card("Estimated Net Worth", f"${calculated_net_worth:,.2f}", f"Health Index: {financial_health_index}/100", financial_health_index > 75)
+    with ov_col_left:
+        st.markdown("#### Chronological Capital Velocity Trends")
+        monthly_trend = runtime_ledger.groupby([pd.Grouper(key='Date', freq='ME'), 'Transaction Type'])['Amount'].sum().unstack().fillna(0)
+        trend_fig = go.Figure()
+        if 'Income' in monthly_trend.columns:
+            trend_fig.add_trace(go.Scatter(x=monthly_trend.index, y=monthly_trend['Income'], name='Gross Inflows', line=dict(color=COLOR_SECONDARY, width=3), mode='lines+markers'))
+        if 'Expense' in monthly_trend.columns:
+            trend_fig.add_trace(go.Scatter(x=monthly_trend.index, y=monthly_trend['Expense'], name='Burn Deficits', line=dict(color=COLOR_DANGER, width=3), mode='lines'))
+        trend_fig.update_layout(template='plotly_white', margin=dict(l=10, r=10, t=10, b=10), height=320, legend=dict(orientation="h", y=1.1))
+        st.plotly_chart(trend_fig, use_container_width=True)
+        
+    with ov_col_right:
+        st.markdown("#### Core Account Capital Share")
+        acct_distribution = runtime_ledger.groupby('Account')['Amount'].sum().reset_index()
+        acct_fig = px.pie(acct_distribution, values='Amount', names='Account', hole=0.5, color_discrete_sequence=[COLOR_PRIMARY, COLOR_SECONDARY, COLOR_ACCENT, COLOR_MUTED])
+        acct_fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), height=320, legend=dict(orientation="h", y=-0.1))
+        st.plotly_chart(acct_fig, use_container_width=True)
+
+# --- PAGE 2: SPENDING ANALYSIS ---
+with page_spending:
+    st.markdown("### Spending Breakdown Matrix")
+    exp_set = runtime_ledger[runtime_ledger['Transaction Type'] == 'Expense']
+    
+    if not exp_set.empty:
+        sp_col1, sp_col2, sp_col3 = st.columns(3)
+        
+        with sp_col1:
+            st.markdown("#### Distribution by Payment Method")
+            pay_fig = px.pie(exp_set, values='Amount', names='Payment Method', color_discrete_sequence=px.colors.sequential.YlGnBu_r)
+            st.plotly_chart(pay_fig, use_container_width=True)
+            
+        with sp_col2:
+            st.markdown("#### Outflows by Allocation Priority")
+            prio_fig = px.bar(exp_set.groupby('Priority')['Amount'].sum().reset_index(), x='Priority', y='Amount', color='Priority', color_discrete_map={'High': COLOR_DANGER, 'Medium': COLOR_ACCENT, 'Low': COLOR_SECONDARY})
+            prio_fig.update_layout(template='plotly_white', showlegend=False)
+            st.plotly_chart(prio_fig, use_container_width=True)
+            
+        with sp_col3:
+            st.markdown("#### Structural Category Density")
+            cat_fig = px.pie(exp_set, values='Amount', names='Category', hole=0.4, color_discrete_sequence=px.colors.qualitative.G10)
+            st.plotly_chart(cat_fig, use_container_width=True)
+    else:
+        st.info("No expenditure traces recorded inside parameters.")
+
+# --- PAGE 3: INCOME TRACKING ---
+with page_income:
+    st.markdown("### Income Streams vs. Operational Debits")
+    inc_col_left, inc_col_right = st.columns(2)
+    
+    with inc_col_left:
+        st.markdown("#### Inflow Channels Stack Analysis")
+        inc_set = runtime_ledger[runtime_ledger['Transaction Type'] == 'Income']
+        if not inc_set.empty:
+            inc_matrix = inc_set.groupby([pd.Grouper(key='Date', freq='ME'), 'Category'])['Amount'].sum().unstack().fillna(0)
+            inc_stack = px.bar(inc_matrix, x=inc_matrix.index, y=inc_matrix.columns, color_discrete_sequence=px.colors.sequential.Mint_r)
+            inc_stack.update_layout(template='plotly_white', barmode='stack')
+            st.plotly_chart(inc_stack, use_container_width=True)
+        else:
+            st.info("No inflow metrics found.")
+            
+    with inc_col_right:
+        st.markdown("#### Account Cross-Comparison Interface")
+        comparison_matrix = runtime_ledger.groupby(['Account', 'Transaction Type'])['Amount'].sum().unstack().fillna(0).reset_index()
+        comp_bar = go.Figure()
+        if 'Income' in comparison_matrix.columns:
+            comp_bar.add_trace(go.Bar(name='Inflows', x=comparison_matrix['Account'], y=comparison_matrix['Income'], marker_color=COLOR_SECONDARY))
+        if 'Expense' in comparison_matrix.columns:
+            comp_bar.add_trace(go.Bar(name='Outflows', x=comparison_matrix['Account'], y=comparison_matrix['Expense'], marker_color=COLOR_DANGER))
+        comp_bar.update_layout(barmode='group', template='plotly_white')
+        st.plotly_chart(comp_bar, use_container_width=True)
+
+# --- PAGE 4: BUDGET REVIEW ---
+with page_budget:
+    st.markdown("### Budget Utilization Analysis Framework")
+    exp_b_set = runtime_ledger[runtime_ledger['Transaction Type'] == 'Expense']
+    
+    if not exp_b_set.empty:
+        b_matrix = exp_b_set.groupby('Category').agg({'Amount': 'sum', 'Assigned Budget': 'first', 'Priority': 'first', 'Recurring': 'first'}).reset_index()
+        b_matrix['Utilization %'] = (b_matrix['Amount'] / b_matrix['Assigned Budget']) * 100
+        b_matrix['Remaining Capital'] = b_matrix['Assigned Budget'] - b_matrix['Amount']
+        
+        # Multi-Variate Layout Breakdowns
+        b_tab_cat, b_tab_prio, b_tab_recur = st.tabs(["📂 Category Constraints", "🚨 Priority Limits", "🔄 Recurring Status Overviews"])
+        
+        with b_tab_cat:
+            cat_b_fig = go.Figure()
+            cat_b_fig.add_trace(go.Bar(name='Assigned Limit Threshold', x=b_matrix['Category'], y=b_matrix['Assigned Budget'], marker_color='#E2E8F0'))
+            cat_b_fig.add_trace(go.Bar(name='Incurred Spend Outflow', x=b_matrix['Category'], y=b_matrix['Amount'], marker_color=COLOR_PRIMARY))
+            cat_b_fig.update_layout(barmode='group', template='plotly_white')
+            st.plotly_chart(cat_b_fig, use_container_width=True)
+            
+        with b_tab_prio:
+            prio_b_matrix = b_matrix.groupby('Priority').agg({'Amount': 'sum', 'Assigned Budget': 'sum'}).reset_index()
+            prio_b_fig = px.bar(prio_b_matrix, x='Priority', y=['Assigned Budget', 'Amount'], barmode='group', color_discrete_sequence=['#CBD5E1', COLOR_ACCENT])
+            prio_b_fig.update_layout(template='plotly_white')
+            st.plotly_chart(prio_b_fig, use_container_width=True)
+            
+        with b_tab_recur:
+            recur_b_matrix = b_matrix.groupby('Recurring').agg({'Amount': 'sum', 'Assigned Budget': 'sum'}).reset_index()
+            recur_b_fig = px.bar(recur_b_matrix, x='Recurring', y=['Assigned Budget', 'Amount'], barmode='group', color_discrete_sequence=['#CBD5E1', COLOR_PRIMARY])
+            recur_b_fig.update_layout(template='plotly_white')
+            st.plotly_chart(recur_b_fig, use_container_width=True)
+            
+        st.markdown("#### Structured Budget Matrix Logs")
+        st.dataframe(b_matrix.style.format({
+            'Amount': '${:,.2f}', 'Assigned Budget': '${:,.2f}', 
+            'Utilization %': '{:.1f}%', 'Remaining Capital': '${:,.2f}'
+        }), use_container_width=True)
+    else:
+        st.info("Provide dataset tracking fields to render utilization insights.")
+
+# --- PAGE 5: TRANSACTION STATUS ---
+with page_status:
+    st.markdown("### Transaction Status Auditing & Controls")
+    
+    status_col_l, status_col_r = st.columns(2)
+    with status_col_l:
+        st.markdown("#### Log Count Quantities by Status")
+        status_shares = runtime_ledger.groupby('Status')['Amount'].count().reset_index().rename(columns={'Amount': 'Count'})
+        status_cnt_fig = px.bar(status_shares, x='Status', y='Count', color='Status', color_discrete_sequence=px.colors.qualitative.Pastel)
+        status_cnt_fig.update_layout(template='plotly_white', showlegend=False)
+        st.plotly_chart(status_cnt_fig, use_container_width=True)
+        
+    with status_col_r:
+        st.markdown("#### Financial Volume Distribution by Category Profile")
+        status_vol_matrix = runtime_ledger.groupby(['Category', 'Status'])['Amount'].sum().unstack().fillna(0)
+        status_vol_fig = px.bar(status_vol_matrix, x=status_vol_matrix.index, y=status_vol_matrix.columns, color_discrete_sequence=[COLOR_SECONDARY, COLOR_ACCENT, COLOR_DANGER])
+        status_vol_fig.update_layout(template='plotly_white')
+        st.plotly_chart(status_vol_fig, use_container_width=True)
         
     st.divider()
-    
-    chart_col_left, chart_col_right = st.columns([2, 1])
-    with chart_col_left:
-        st.markdown("### Liquidity Flow Dynamics & Cash Intercepts")
-        m_dist = filtered_ledger[filtered_ledger['Transaction Type'].isin(['Income', 'Expense'])].groupby([pd.Grouper(key='Date', freq='ME'), 'Transaction Type'])['Amount'].sum().unstack().fillna(0)
-        flow_graphic = go.Figure()
-        if 'Income' in m_dist.columns:
-            flow_graphic.add_trace(go.Scatter(x=m_dist.index, y=m_dist['Income'], name='Total Capital Influx', line=dict(color=COLOR_SECONDARY, width=3.5), stackgroup='one'))
-        if 'Expense' in m_dist.columns:
-            flow_graphic.add_trace(go.Scatter(x=m_dist.index, y=m_dist['Expense'], name='System Burn Rate', line=dict(color=COLOR_DANGER, width=3)))
-        flow_graphic.update_layout(template='plotly_white', margin=dict(l=10, r=10, t=15, b=15), height=360, legend=dict(orientation="h", y=1.1))
-        st.plotly_chart(flow_graphic, use_container_width=True)
-        
-    with chart_col_right:
-        st.markdown("### System Health Optimization")
-        gauge_graphic = go.Figure(go.Indicator(
-            mode="gauge+number", value=financial_health_index, domain={'x': [0, 1], 'y': [0, 1]},
-            gauge={
-                'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': COLOR_MUTED},
-                'bar': {'color': COLOR_PRIMARY, 'thickness': 0.25}, 'bgcolor': "white", 'borderwidth': 1, 'bordercolor': "#E2E8F0",
-                'steps': [{'range': [0, 45], 'color': '#FFE4E6'}, {'range': [45, 75], 'color': '#FEF3C7'}, {'range': [75, 100], 'color': '#D1FAE5'}]
-            }
-        ))
-        gauge_graphic.update_layout(margin=dict(l=20, r=20, t=30, b=10), height=310)
-        st.plotly_chart(gauge_graphic, use_container_width=True)
+    st.markdown("#### Monthly Average Flow Values")
+    runtime_ledger['Month_Label'] = runtime_ledger['Date'].dt.strftime('%B %Y')
+    monthly_averages = runtime_ledger.groupby(['Month_Label', 'Status'])['Amount'].mean().unstack().fillna(0)
+    st.dataframe(monthly_averages.style.format("${:,.2f}"), use_container_width=True)
 
-# --- TAB 2: EXPENSE ANALYTICS ---
-with tab_expense:
-    expense_superset = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense']
-    if not expense_superset.empty:
-        view_col_left, view_col_right = st.columns(2)
-        with view_col_left:
-            st.markdown("### Structural Distribution Density")
-            donut_graphic = px.pie(expense_superset, values='Amount', names='Category', hole=0.55, color_discrete_sequence=px.colors.qualitative.G10)
-            st.plotly_chart(donut_graphic, use_container_width=True)
-        with view_col_right:
-            st.markdown("### Granular Spending Hierarchy")
-            treemap_graphic = px.treemap(expense_superset, path=['Category', 'Sub Category'], values='Amount', color='Amount', color_continuous_scale='Purples')
-            st.plotly_chart(treemap_graphic, use_container_width=True)
-    else:
-        st.info("No expense tracking data falls within active filter states.")
-
-# --- TAB 3: INFLOW CHANNELS ---
-with tab_income:
-    income_superset = filtered_ledger[filtered_ledger['Transaction Type'] == 'Income']
-    if not income_superset.empty:
-        col_inc_left, col_inc_right = st.columns([1, 2])
-        with col_inc_left:
-            st.markdown("### Input Vector Contributions")
-            income_share_graphic = px.pie(income_superset, values='Amount', names='Income Source', hole=0.4)
-            st.plotly_chart(income_share_graphic, use_container_width=True)
-        with col_inc_right:
-            st.markdown("### Inflow Channels Stack Velocity")
-            m_inc_streams = income_superset.groupby([pd.Grouper(key='Date', freq='ME'), 'Income Source'])['Amount'].sum().unstack().fillna(0)
-            income_bar_graphic = px.bar(m_inc_streams, x=m_inc_streams.index, y=m_inc_streams.columns, color_discrete_sequence=px.colors.sequential.Agsunset)
-            income_bar_graphic.update_layout(template='plotly_white', barmode='stack')
-            st.plotly_chart(income_bar_graphic, use_container_width=True)
-    else:
-        st.info("No verified income records found in isolated sub-matrices.")
-
-# --- TAB 4: BUDGET CONSTRAINTS ---
-with tab_budget:
-    exp_data = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense']
-    if not exp_data.empty:
-        budget_matrix = exp_data.groupby('Category').agg({'Amount':'sum', 'Budget':'first'}).reset_index()
-        budget_matrix['Budget'] = budget_matrix['Budget'].apply(lambda val: val if val > 0 else 1350.00)
-        budget_matrix['Utilization %'] = (budget_matrix['Amount'] / budget_matrix['Budget']) * 100
-        budget_matrix['Net Variance'] = budget_matrix['Budget'] - budget_matrix['Amount']
-        
-        comparison_bar = go.Figure()
-        comparison_bar.add_trace(go.Bar(name='Assigned Guardrail', x=budget_matrix['Category'], y=budget_matrix['Budget'], marker_color='#E2E8F0'))
-        comparison_bar.add_trace(go.Bar(name='Realized Incurred Capital', x=budget_matrix['Category'], y=budget_matrix['Amount'], marker_color=COLOR_PRIMARY))
-        comparison_bar.update_layout(barmode='group', template='plotly_white')
-        st.plotly_chart(comparison_bar, use_container_width=True)
-        st.dataframe(budget_matrix.style.format({'Amount': '${:,.2f}', 'Budget': '${:,.2f}', 'Utilization %': '{:.1f}%', 'Net Variance': '${:,.2f}'}), use_container_width=True)
-    else:
-        st.info("No historical budget vectors found in standard scope constraints.")
-
-# --- TAB 5: SAVINGS VAULTS ---
-with tab_savings:
-    sav_data = filtered_ledger[filtered_ledger['Transaction Type'] == 'Savings']
-    if not sav_data.empty:
-        m_sav_accum = sav_data.groupby(pd.Grouper(key='Date', freq='ME'))['Amount'].sum().reset_index()
-        m_sav_accum['Compound Growth Curve'] = m_sav_accum['Amount'].cumsum()
-        v_col_l, v_col_r = st.columns([2, 1])
-        with v_col_l:
-            growth_area_chart = px.area(m_sav_accum, x='Date', y='Compound Growth Curve', color_discrete_sequence=[COLOR_SECONDARY])
-            st.plotly_chart(growth_area_chart, use_container_width=True)
-        with v_col_r:
-            tot_liquid = m_sav_accum['Amount'].sum()
-            st.metric("Consolidated Escrow Cash Balance", f"${tot_liquid:,.2f}")
-            st.progress(min(1.0, tot_liquid / 30000.0))
-    else:
-        st.info("No transaction traces linked to capital preservation vaults.")
-
-# --- TAB 6: ASSET ALLOCATION ---
-with tab_asset:
-    inv_data = filtered_ledger[filtered_ledger['Transaction Type'] == 'Investment']
-    if not inv_data.empty:
-        inv_summary = inv_data.groupby('Investment Type')['Amount'].sum().reset_index()
-        a_col_l, a_col_r = st.columns(2)
-        with a_col_l:
-            risk_pie_chart = px.pie(inv_summary, values='Amount', names='Investment Type', color_discrete_sequence=px.colors.sequential.Darkmint)
-            st.plotly_chart(risk_pie_chart, use_container_width=True)
-        with a_col_r:
-            cum_inv = inv_data.groupby([pd.Grouper(key='Date', freq='ME'), 'Investment Type'])['Amount'].sum().unstack().fillna(0).cumsum()
-            asset_line_chart = px.line(cum_inv, x=cum_inv.index, y=cum_inv.columns)
-            st.plotly_chart(asset_line_chart, use_container_width=True)
-    else:
-        st.info("No active capital deployments identified in portfolio tracks.")
-
-# --- TAB 7: GOAL TRACKS ---
-with tab_milestones:
-    milestone_aggregates = filtered_ledger[filtered_ledger['Transaction Type'] == 'Savings'].groupby('Goal Name')['Amount'].sum().reset_index()
-    milestone_aggregates = milestone_aggregates[milestone_aggregates['Goal Name'] != 'None']
-    if not milestone_aggregates.empty:
-        capital_target_index = {'Emergency Cash Reserves': 25000, 'Tax Capital Escrow': 15000, 'Venture Deployment Pool': 60000}
-        milestone_aggregates['Target Benchmark'] = milestone_aggregates['Goal Name'].map(capital_target_index).fillna(40000)
-        milestone_aggregates['Completion Index Ratio'] = (milestone_aggregates['Amount'] / milestone_aggregates['Target Benchmark']) * 100
-        for _, milestone_row in milestone_aggregates.iterrows():
-            st.markdown(f"#### 🎯 Target: {milestone_row['Goal Name']}")
-            st.progress(min(1.0, milestone_row['Completion Index Ratio'] / 100.0))
-            st.markdown(f"Secured Allocation: **${milestone_row['Amount']:,.2f}** / Goal Benchmark: **${milestone_row['Target Benchmark']:,.2f}** ({milestone_row['Completion Index Ratio']:.1f}% Fulfilled)")
-            st.divider()
-    else:
-        st.info("No active investment milestone definitions found.")
-
-# --- TAB 8: PREDICTIVE AI ENGINE ---
-with tab_predictive:
-    st.markdown("### 📈 Closed-Form Trend Regression Projections")
-    m_burn_series = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense'].groupby(pd.Grouper(key='Date', freq='ME'))['Amount'].sum().reset_index()
-    if len(m_burn_series) >= 3:
-        m_burn_series['Ordinal_Time_Vector'] = m_burn_series['Date'].map(datetime.date.toordinal)
-        future_ordinals, projected_burns = execute_pure_linear_forecast(m_burn_series['Ordinal_Time_Vector'].values, m_burn_series['Amount'].values, steps_forward=6)
-        extrapolated_timeline = [datetime.date.fromordinal(int(val)) for val in future_ordinals]
-        forecast_graphic = go.Figure()
-        forecast_graphic.add_trace(go.Scatter(x=m_burn_series['Date'], y=m_burn_series['Amount'].values, name='Incurred Burn', line=dict(color=COLOR_PRIMARY, width=3.5)))
-        forecast_graphic.add_trace(go.Scatter(x=extrapolated_timeline, y=projected_burns, name='Trend Forecast', line=dict(color=COLOR_ACCENT, dash='dash', width=3)))
-        st.plotly_chart(forecast_graphic, use_container_width=True)
-    else:
-        st.info("Provide at least 3 months of historical data entries to execute structural line forecasts.")
-
-# --- TAB 9: DATA EXPORT ---
-with tab_export:
-    st.dataframe(filtered_ledger, use_container_width=True)
-    io_buf = io.StringIO()
-    filtered_ledger.to_csv(io_buf, index=False)
-    st.download_button(label="📥 Download Extracted Settlement CSV Ledger", data=io_buf.getvalue().encode('utf-8'), file_name="Aura_Extract.csv", mime="text/csv")
+# =====================================================================
+# 6. CENTRAL EXPORT INFRASTRUCTURE
+# =====================================================================
+st.sidebar.divider()
+st.sidebar.markdown("### 💾 Export Engine")
+io_buf = io.StringIO()
+runtime_ledger.to_csv(io_buf, index=False)
+st.sidebar.download_button(
+    label="Download 360° Report Ledger", 
+    data=io_buf.getvalue().encode('utf-8'), 
+    file_name="Aura_Core_Financials.csv", 
+    mime="text/csv"
+)
