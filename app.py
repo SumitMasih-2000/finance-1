@@ -299,7 +299,7 @@ else:
         st.markdown("</div>", unsafe_allow_html=True)
 
     # =====================================================================
-    # 7. ADDED VISUAL WORKSPACE OVERVIEW BAR GRAPH (REPLACED EMPTY WHITE SPACE)
+    # 7. VISUAL WORKSPACE OVERVIEW BAR GRAPH (FIXED PROPERTY SYSTEM)
     # =====================================================================
     st.markdown("<div class='finance-card'>", unsafe_allow_html=True)
     st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>📊 Live Target vs Spent Allocation Breakdown</h4>", unsafe_allow_html=True)
@@ -314,14 +314,14 @@ else:
         x=categories,
         y=target_caps,
         marker_color='#E2E8F0',
-        roundcorners="top"
+        marker_corner_radius=10  # <-- Corrected syntax property replacement
     ))
     bar_fig.add_trace(go.Bar(
         name='Current Real Outlays',
         x=categories,
         y=current_outlays,
         marker_color='#8B5CF6',
-        roundcorners="top"
+        marker_corner_radius=10  # <-- Corrected syntax property replacement
     ))
     
     bar_fig.update_layout(
