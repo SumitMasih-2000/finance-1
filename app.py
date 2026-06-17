@@ -299,7 +299,7 @@ else:
         st.markdown("</div>", unsafe_allow_html=True)
 
     # =====================================================================
-    # 7. LIVE CATEGORY SPEND BREAKDOWN COMPARISON BAR GRAPH
+    # 7. LIVE CATEGORY SPEND BREAKDOWN COMPARISON BAR GRAPH (COMPATIBLE MAPPING)
     # =====================================================================
     st.markdown("<div class='finance-card'>", unsafe_allow_html=True)
     st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>📊 Live Target vs Spent Allocation Breakdown</h4>", unsafe_allow_html=True)
@@ -313,13 +313,13 @@ else:
         name='Target Budget Limit',
         x=categories,
         y=target_caps,
-        marker=dict(color='#E2E8F0', corner_radius=10)  # <-- Fixed nested syntax mapping
+        marker=dict(color='#E2E8F0')  # Standard compatible property mapping
     ))
     bar_fig.add_trace(go.Bar(
         name='Current Real Outlays',
         x=categories,
         y=current_outlays,
-        marker=dict(color='#8B5CF6', corner_radius=10)  # <-- Fixed nested syntax mapping
+        marker=dict(color='#8B5CF6')  # Standard compatible property mapping
     ))
     
     bar_fig.update_layout(
