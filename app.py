@@ -69,27 +69,6 @@ def inject_moneyt_template_theme():
             margin: 1.5rem 0 0.5rem 1rem;
         }
         
-        /* Switch to Pro Custom Banner Widget */
-        .pro-banner {
-            background: linear-gradient(135deg, #1E1B4B 0%, #311042 100%);
-            padding: 1.25rem;
-            border-radius: 14px;
-            margin: 2rem 0.75rem 1rem 0.75rem;
-            border: 1px solid #431407;
-            position: relative;
-        }
-        .pro-banner-title {
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        .pro-banner-desc {
-            color: #C084FC;
-            font-size: 0.75rem;
-            line-height: 1.4;
-        }
-        
         /* --- HORIZONTAL CONTROLS EXPANDER PANEL --- */
         .streamlit-expanderHeader {
             background-color: #FFFFFF !important;
@@ -196,7 +175,6 @@ def get_clean_mock_dataset():
     today = datetime.date.today()
     date_range = pd.date_range(end=today, periods=30, freq='D')
     
-    # Matching the trend trajectory from image curves
     income_curve = 400 + 150 * np.sin(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 15, 30)
     expense_curve = 300 + 120 * np.cos(np.linspace(0, 2*np.pi, 30)) + np.random.normal(0, 10, 30)
     
@@ -220,7 +198,7 @@ def get_clean_mock_dataset():
 chart_data, raw_table = get_clean_mock_dataset()
 
 # =====================================================================
-# 3. SIDEBAR HTML EMBED CLONE LAYER
+# 3. SIDEBAR HTML EMBED CLONE LAYER (REMOVED SWITCH TO PRO & GENERAL)
 # =====================================================================
 with st.sidebar:
     st.markdown("<h2 style='margin-bottom:0rem; font-weight:700;'>💳 Money T</h2>", unsafe_allow_html=True)
@@ -232,18 +210,6 @@ with st.sidebar:
     st.markdown('<div class="sidebar-nav-item">💳 Card</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-nav-item">📊 Analytics</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-nav-item">⏱️ History</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="sidebar-section-lbl">GENERAL</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item">⚙️ Settings</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item">❓ Help Center</div>', unsafe_allow_html=True)
-    
-    # Custom switch to pro graphic card inside sidebar layout frame
-    st.markdown("""
-    <div class="pro-banner">
-        <div class="pro-banner-title">Switch to Pro</div>
-        <div class="pro-banner-desc">Unlock advanced analytics, unlimited projects, and priority support.</div>
-    </div>
-    """, unsafe_allow_html=True)
 
 # =====================================================================
 # 4. TOP MANAGEMENT FILTER EXPANDER SECTION
@@ -407,7 +373,7 @@ with body_col_right:
     gauge_fig.update_layout(
         showlegend=True, 
         legend=dict(orientation="h", y=-0.1, x=-0.1),
-        annotations=[dict(text='$55,501<br><span style="font-size:0.75rem; color:#10B981;">▲ 20% Growth</span>', x=0.5, y=0.5, font_size=20, font_weight="bold", showarrow=false)]
+        annotations=[dict(text='$55,501<br><span style="font-size:0.75rem; color:#10B981;">▲ 20% Growth</span>', x=0.5, y=0.5, font_size=20, font_weight="bold", showarrow=False)]
     )
     st.plotly_chart(gauge_fig, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
