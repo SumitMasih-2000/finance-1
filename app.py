@@ -3,23 +3,24 @@ import pandas as pd
 import plotly.graph_objects as go
 
 # =====================================================================
-# 1. APPLICATION ARCHITECTURE & UI TEMPLATE THEME CONFIGURATION
+# 1. APPLICATION ARCHITECTURE & UI TEMPLATE CONFIGURATION (GRADIENT THEME)
 # =====================================================================
 st.set_page_config(
-    page_title="Money T - Budgeting Suite",
-    page_icon="💰",
+    page_title="Personal Finance - Allocation Suite",
+    page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-def inject_moneyt_template_theme():
-    """Injects high-fidelity stylesheets matching your template layout style."""
+def inject_personal_finance_theme():
+    """Injects high-fidelity stylesheets matching the new white-purple gradient layout."""
     st.markdown("""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
         
+        /* Master Main Canvas Settings (Clean Soft Purple/Grey Gradient Background) */
         .stApp {
-            background-color: #F3F4F6 !important;
+            background: linear-gradient(135deg, #F3F4F6 0%, #EEEFFF 100%) !important;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
         
@@ -27,131 +28,157 @@ def inject_moneyt_template_theme():
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
         
-        /* --- SIDEBAR DESIGN BLOCK (#111114 Dark Charcoal) --- */
+        /* --- VERTICAL LEFT NAVIGATION BLOCKS (New Glass Template Style) --- */
         [data-testid="stSidebar"] {
-            background-color: #111114 !important;
-            border-right: 1px solid #1E1E24;
-            padding-top: 1rem !important;
+            background-color: #FFFFFF !important;
+            border-right: 1px solid #E2E8F0;
+            padding-top: 1.5rem !important;
         }
         [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
-            color: #FFFFFF !important;
+            color: #4A5568 !important;
         }
         
         .sidebar-nav-item {
             display: flex;
             align-items: center;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            margin-bottom: 0.25rem;
-            color: #A1A1AA;
-            font-weight: 500;
+            padding: 0.85rem 1.2rem;
+            border-radius: 14px;
+            margin-bottom: 0.4rem;
+            color: #718096;
+            font-weight: 600;
             font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
         .sidebar-nav-item.active {
-            background-color: #1F1F23;
-            color: #FFFFFF;
+            background: linear-gradient(90deg, #8B5CF6 0%, #6366F1 100%);
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
         }
-        .sidebar-section-lbl {
+        
+        /* --- HORIZONTAL MONTH SELECTOR HEADER BANNER --- */
+        .month-banner-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #FFFFFF;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .month-pill {
+            padding: 0.4rem 0.85rem;
             font-size: 0.75rem;
             font-weight: 700;
-            color: #52525B;
-            letter-spacing: 0.08em;
-            margin: 1.5rem 0 0.5rem 1rem;
+            color: #A0AEC0;
+            text-transform: uppercase;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
         }
-        
-        /* --- DYNAMIC METRIC SURFACES --- */
-        .kpi-wrapper {
-            background-color: #FFFFFF;
-            padding: 1.25rem;
-            border-radius: 16px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-            border: 1px solid #E4E4E7;
-            min-height: 125px;
+        .month-pill.active {
+            background: linear-gradient(90deg, #8B5CF6 0%, #3B82F6 100%);
+            color: #FFFFFF;
+            box-shadow: 0 2px 6px rgba(139, 92, 246, 0.3);
         }
-        .kpi-title {
-            font-size: 0.85rem;
-            color: #71717A;
-            font-weight: 500;
-        }
-        .kpi-value {
-            font-size: 2.1rem;
-            font-weight: 700;
-            color: #111114;
-            margin-top: 0.4rem;
-            letter-spacing: -0.04em;
-        }
-        
-        .border-purple { border-top: 4px solid #6366F1; }
-        .border-orange { border-top: 4px solid #F97316; }
-        .border-green { border-top: 4px solid #10B981; }
 
-        /* --- CLEAN STREAMLINED TABLE SYSTEMS --- */
+        /* --- DYNAMIC WHITE CARD SURFACES --- */
+        .finance-card {
+            background-color: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+            margin-bottom: 1rem;
+        }
+        
+        /* --- PLANNED DIRECTIVE TABLE SYSTEMS --- */
         .custom-table {
             width: 100%;
             border-collapse: collapse;
             background-color: #FFFFFF;
-            border-radius: 12px;
-            overflow: hidden;
         }
         .custom-table th {
             text-align: left;
-            padding: 0.75rem 1rem;
-            background-color: #FAFAFA;
-            color: #71717A;
+            padding: 0.85rem 1rem;
+            color: #A0AEC0;
             font-weight: 600;
             font-size: 0.8rem;
-            border-bottom: 1px solid #E4E4E7;
+            border-bottom: 1px solid #EDF2F7;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .custom-table td {
-            padding: 0.9rem 1rem;
-            color: #111114;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #E4E4E7;
+            padding: 1.1rem 1rem;
+            color: #2D3748;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #EDF2F7;
         }
         .pill-medium {
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
+            padding: 0.3rem 0.75rem;
+            border-radius: 8px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
         }
         
         #MainMenu, footer { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
 
-inject_moneyt_template_theme()
+inject_personal_finance_theme()
 
 # =====================================================================
-# 2. RUNTIME ACTIVE LEDGER STATE ENGINE (USER ENTRY ONLY)
+# 2. RUNTIME INTERNAL STORAGE SYSTEM
 # =====================================================================
 if 'user_expenses' not in st.session_state:
     st.session_state['user_expenses'] = []
 
 # =====================================================================
-# 3. SIDEBAR NAVIGATION LAYOUT
+# 3. SIDEBAR NAVIGATION LAYOUT (White Minimalist Blueprint)
 # =====================================================================
 with st.sidebar:
-    st.markdown("<h2 style='margin-bottom:0rem; font-weight:700;'>💳 Money T</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='font-weight:800; color:#2D3748; margin-left:0.5rem;'>📊 PERSONAL</h2><p style='color:#718096; font-size:0.8rem; margin-top:-0.75rem; margin-left:0.5rem; font-weight:600; letter-spacing:0.05em;'>FINANCE ENGINE</p>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
-    st.markdown('<div class="sidebar-section-lbl">MENU</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-nav-item active">🏠 Dashboard Plan</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item active">🏠 Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">💼 Budgeting</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">📈 Income</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">📉 Expenses</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">🛡️ Investment</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-nav-item">🎯 Fin Goals</div>', unsafe_allow_html=True)
 
 # =====================================================================
-# 4. INTERACTIVE HEADER & ENGINE CONTROL CONTROLS
+# 4. TEMPLATE MONTH BANNER HORIZONTAL SELECTOR COMPONENT
 # =====================================================================
-st.markdown("<h1 style='color:#111114; font-weight:700; margin-bottom: 0rem;'>Personalized Allocation Strategy Matrix</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color:#71717A; margin-top:0.25rem; margin-bottom:1.5rem;'>Zero Pre-loaded Dummy Data. Driven entirely by your income and live spending entries.</p>", unsafe_allow_html=True)
+st.markdown("""
+<div class="month-banner-container">
+    <div class="month-pill">January</div>
+    <div class="month-pill">February</div>
+    <div class="month-pill">March</div>
+    <div class="month-pill active">April</div>
+    <div class="month-pill">May</div>
+    <div class="month-pill">June</div>
+    <div class="month-pill">July</div>
+    <div class="month-pill">August</div>
+    <div class="month-pill">September</div>
+    <div class="month-pill">October</div>
+    <div class="month-pill">November</div>
+    <div class="month-pill">December</div>
+</div>
+""", unsafe_allow_html=True)
 
-# --- FINANCIAL INPUT SYSTEM ---
-st.markdown("<div style='background-color: #FFFFFF; padding:1.25rem; border-radius:14px; border:1px solid #E4E4E7; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-st.markdown("<h4 style='margin:0 0 0.75rem 0; font-weight:700; color:#111114;'>⚙️ Live Budget Planner Inputs</h4>", unsafe_allow_html=True)
+# =====================================================================
+# 5. INPUT REGISTRATION ENGINE MAPPING
+# =====================================================================
+st.markdown("<div class='finance-card'>", unsafe_allow_html=True)
+st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>⚙️ Budget Parameter Configuration</h4>", unsafe_allow_html=True)
 
 config_col1, config_col2, config_col3 = st.columns([1.5, 1.5, 2])
 
 with config_col1:
     currency_choice = st.selectbox(
-        "Select Local Currency Token",
+        "Reporting Currency Token",
         options=["USD ($)", "EUR (€)", "GBP (£)", "JPY (¥)", "INR (₹)"]
     )
     symbols = {"USD ($)": "$", "EUR (€)": "€", "GBP (£)": "£", "JPY (¥)": "¥", "INR (₹)": "₹"}
@@ -159,31 +186,29 @@ with config_col1:
 
 with config_col2:
     user_income = st.number_input(
-        f"Enter Your Real Monthly Net Income ({curr_sym}):", 
+        f"Enter Real Monthly Net Income ({curr_sym}):", 
         min_value=0.0, 
         value=80000.0,
-        step=500.0
+        step=1000.0
     )
 
 with config_col3:
     allocation_strategy = st.selectbox(
-        "Select Budget Strategy Rule",
+        "Select Matrix Allocation Target Strategy",
         options=[
             "Balanced Strategy (50% Needs, 30% Wants, 20% Savings)",
-            "Aggressive Investment Strategy (40% Needs, 20% Wants, 40% Savings)",
-            "Conservative Minimum Strategy (60% Needs, 20% Wants, 20% Savings)"
+            "Aggressive Wealth Accumulation (40% Needs, 20% Wants, 40% Savings)",
+            "Conservative Baseline Rule (60% Needs, 20% Wants, 20% Savings)"
         ]
     )
 
-# Deconstruct Strategy Splitting Rules
 if "Balanced Strategy" in allocation_strategy:
     p_needs, p_wants, p_savings = 0.50, 0.30, 0.20
-elif "Aggressive Investment" in allocation_strategy:
+elif "Aggressive Wealth Accumulation" in allocation_strategy:
     p_needs, p_wants, p_savings = 0.40, 0.20, 0.40
 else:
     p_needs, p_wants, p_savings = 0.60, 0.20, 0.20
 
-# Absolute Dynamic Allocations Calculation
 amt_needs = user_income * p_needs
 amt_wants = user_income * p_wants
 amt_savings = user_income * p_savings
@@ -191,116 +216,85 @@ amt_savings = user_income * p_savings
 st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================================
-# 5. ENTER REAL EXPENSES INTERACTIVE MANIFEST SYSTEM
+# 6. TRANSACTION INPUT PORTAL
 # =====================================================================
-st.markdown("<div style='background-color: #FFFFFF; padding:1.25rem; border-radius:14px; border:1px solid #E4E4E7; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-st.markdown("<h4 style='margin:0 0 0.75rem 0; font-weight:700; color:#111114;'>✍️ Record Where and How Much You Spent</h4>", unsafe_allow_html=True)
+st.markdown("<div class='finance-card'>", unsafe_allow_html=True)
+st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>✍️ Record Live Expense Transaction</h4>", unsafe_allow_html=True)
 
 exp_col1, exp_col2, exp_col3, exp_col4 = st.columns([2, 2, 1.5, 1])
 
 with exp_col1:
-    entry_title = st.text_input("Where did you spend this? (e.g., Landlord, Walmart, Gas Station, Vanguard)", placeholder="Enter recipient or store")
+    entry_title = st.text_input("Merchant / Recipient Name", placeholder="e.g., Landlord Corp, Target, Vanguard")
 with exp_col2:
-    entry_category = st.selectbox("Which core allocation pool does this belong to?", ["Essential Needs", "Personal Lifestyle & Wants", "Future Savings & Investments"])
+    entry_category = st.selectbox("Strategic Target Category Pool", ["Essential Needs", "Personal Lifestyle & Wants", "Future Savings & Investments"])
 with exp_col3:
-    entry_amount = st.number_input(f"Amount Spent ({curr_sym})", min_value=0.0, value=0.0, step=10.0)
+    entry_amount = st.number_input(f"Amount Charged ({curr_sym})", min_value=0.0, value=0.0, step=25.0)
 with exp_col4:
-    st.markdown("<div style='padding-top:1.7rem;'></div>", unsafe_allow_html=True)
-    add_btn = st.button("Log Expense", use_container_width=True)
+    st.markdown("<div style='padding-top:1.75rem;'></div>", unsafe_allow_html=True)
+    add_btn = st.button("Log Entry", use_container_width=True)
 
 if add_btn and entry_title and entry_amount > 0:
     st.session_state['user_expenses'].append({
-        "Title": entry_title,
+        "Merchant": entry_title,
         "Category": entry_category,
         "Amount": entry_amount
     })
-    st.success(f"Successfully logged entry for '{entry_title}'!")
+    st.toast(f"Logged entry for {entry_title}!", icon="✅")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# Calculate active balances based on live user entries
-df_entries = pd.DataFrame(st.session_state['user_expenses']) if st.session_state['user_expenses'] else pd.DataFrame(columns=["Title", "Category", "Amount"])
+# Compile calculations based on live arrays
+df_entries = pd.DataFrame(st.session_state['user_expenses']) if st.session_state['user_expenses'] else pd.DataFrame(columns=["Merchant", "Category", "Amount"])
 
 spent_needs = df_entries[df_entries['Category'] == "Essential Needs"]['Amount'].sum()
 spent_wants = df_entries[df_entries['Category'] == "Personal Lifestyle & Wants"]['Amount'].sum()
 spent_savings = df_entries[df_entries['Category'] == "Future Savings & Investments"]['Amount'].sum()
 
-# Check to block layout rendering if income isn't set yet
+total_all_expenses = spent_needs + spent_wants + spent_savings
+used_percentage = int((total_all_expenses / user_income * 100)) if user_income > 0 else 0
+
+# Terminate rendering downstream if values aren't initialized yet
 if user_income <= 0:
-    st.info("👋 Please set an income value greater than 0 above to generate your live dashboard analytics.")
+    st.info("👋 Setup your monthly income parameter configuration above to trigger the dynamic tracking curves.")
 else:
     # =====================================================================
-    # 6. DYNAMIC CALCULATED HIGHLIGHT BUDGET REMAINING KPI CARDS
+    # 7. DASHBOARD SECTIONS GRID (MATCHING NEW TEMPLATE GRAPH LAYOUTS)
     # =====================================================================
-    kpi_col1, kpi_col2, kpi_col3 = st.columns(3)
-
-    with kpi_col1:
-        st.markdown(f"""
-        <div class="kpi-wrapper border-purple">
-            <div class="kpi-title">Essential Needs Left ({int(p_needs*100)}%)</div>
-            <div class="kpi-value" style="color: #4F46E5;">{curr_sym}{(amt_needs - spent_needs):,.2f}</div>
-            <div style="font-size:0.75rem; color:#71717A; margin-top:0.4rem;">Total Budgeted: {curr_sym}{amt_needs:,.2f}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with kpi_col2:
-        st.markdown(f"""
-        <div class="kpi-wrapper border-orange">
-            <div class="kpi-title">Lifestyle & Wants Left ({int(p_wants*100)}%)</div>
-            <div class="kpi-value" style="color: #F97316;">{curr_sym}{(amt_wants - spent_wants):,.2f}</div>
-            <div style="font-size:0.75rem; color:#71717A; margin-top:0.4rem;">Total Budgeted: {curr_sym}{amt_wants:,.2f}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with kpi_col3:
-        st.markdown(f"""
-        <div class="kpi-wrapper border-green">
-            <div class="kpi-title">Savings Strategy Target ({int(p_savings*100)}%)</div>
-            <div class="kpi-value" style="color: #10B981;">{curr_sym}{(amt_savings - spent_savings):,.2f}</div>
-            <div style="font-size:0.75rem; color:#71717A; margin-top:0.4rem;">Total Budgeted: {curr_sym}{amt_savings:,.2f}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # =====================================================================
-    # 7. CENTRAL LAYOUT DATA TABLES & VISUAL PROGRESS
-    # =====================================================================
-    body_col_left, body_col_right = st.columns([1.8, 1.2])
-
-    with body_col_left:
-        # Dynamic Recommendation Details Action Grid (Your Exact Table Layout)
-        st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-        st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#111114;'>Exact Allocation Directives Matrix</h4>", unsafe_allow_html=True)
+    row1_left, row1_right = st.columns([2, 1])
+    
+    with row1_left:
+        # Spending Allocation Table Block
+        st.markdown("<div class='finance-card' style='min-height:380px;'>", unsafe_allow_html=True)
+        st.markdown("<h4 style='margin:0 0 1.25rem 0; font-weight:700; color:#2D3748;'>Exact Strategic Allocation Directives Matrix</h4>", unsafe_allow_html=True)
         
         table_html = f"""
         <table class='custom-table'>
             <thead>
-                <tr style='background-color: #FAFAFA;'>
+                <tr>
                     <th>Where You Should Spend</th>
-                    <th>Examples / Real Items Logged Below</th>
-                    <th>Budget Target Split</th>
+                    <th>Examples & Subcategories Covered</th>
+                    <th>Target Split</th>
                     <th>Remaining Spending Budget Available</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td style='font-weight:600;'>📁 Essential Needs</td>
-                    <td style='color:#71717A; font-size:0.8rem;'>Rent/Mortgage, Utilities, Groceries, Insurance, Minimum Debt Payments</td>
+                    <td style='font-weight:700; color:#4F46E5;'>📁 Essential Needs</td>
+                    <td style='color:#718096; font-size:0.8rem;'>Rent/Mortgage, Utilities, Groceries, Insurance, Minimum Debt Payments</td>
                     <td><span class='pill-medium' style='background-color:#EEF2FF; color:#4F46E5;'>{int(p_needs*100)}%</span></td>
-                    <td style='font-weight:700;'>{curr_sym}{(amt_needs - spent_needs):,.2f}</td>
+                    <td style='font-weight:700; font-size:1rem; color:#2D3748;'>{curr_sym}{(amt_needs - spent_needs):,.2f}</td>
                 </tr>
                 <tr>
-                    <td style='font-weight:600;'>📁 Personal Lifestyle & Wants</td>
-                    <td style='color:#71717A; font-size:0.8rem;'>Dining Out, Entertainment, Hobbies, Travel, Shopping, Subscriptions</td>
+                    <td style='font-weight:700; color:#D97706;'>📁 Personal Lifestyle & Wants</td>
+                    <td style='color:#718096; font-size:0.8rem;'>Dining Out, Entertainment, Hobbies, Travel, Shopping, Subscriptions</td>
                     <td><span class='pill-medium' style='background-color:#FFFBEB; color:#D97706;'>{int(p_wants*100)}%</span></td>
-                    <td style='font-weight:700;'>{curr_sym}{(amt_wants - spent_wants):,.2f}</td>
+                    <td style='font-weight:700; font-size:1rem; color:#2D3748;'>{curr_sym}{(amt_wants - spent_wants):,.2f}</td>
                 </tr>
                 <tr>
-                    <td style='font-weight:600;'>📁 Future Savings & Investments</td>
-                    <td style='color:#71717A; font-size:0.8rem;'>Emergency Fund, Retirement accounts (401k/IRA), Stocks, Cash Reserves</td>
+                    <td style='font-weight:700; color:#059669;'>📁 Future Savings & Investments</td>
+                    <td style='color:#718096; font-size:0.8rem;'>Emergency Fund, Retirement accounts (401k/IRA), Stocks, Cash Reserves</td>
                     <td><span class='pill-medium' style='background-color:#ECFDF5; color:#059669;'>{int(p_savings*100)}%</span></td>
-                    <td style='font-weight:700;'>{curr_sym}{(amt_savings - spent_savings):,.2f}</td>
+                    <td style='font-weight:700; font-size:1rem; color:#2D3748;'>{curr_sym}{(amt_savings - spent_savings):,.2f}</td>
                 </tr>
             </tbody>
         </table>
@@ -308,45 +302,67 @@ else:
         st.markdown(table_html, unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
-        # Live Ledger List Table
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
-        st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#111114;'>Your Live Spending Ledger</h4>", unsafe_allow_html=True)
-        if not df_entries.empty:
-            st.dataframe(df_entries, use_container_width=True, hide_index=True)
-            if st.button("Clear All Logged Expenses"):
-                st.session_state['user_expenses'] = []
-                st.rerun()
-        else:
-            st.markdown("<p style='color:#71717A; font-size:0.85rem;'>No expenses logged yet. Use the form above to record items.</p>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    with body_col_right:
-        # High Fidelity Visual Donut Matrix Tracking Real-Time Used vs Available Funds
-        st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7; min-height:360px;'>", unsafe_allow_html=True)
-        st.markdown("<span style='font-weight:700; color:#111114;'>Active Resource Spending Distribution</span>", unsafe_allow_html=True)
+    with row1_right:
+        # Ratio Income / Budget Usage Gauge (Top Middle-Right circle widget from template image)
+        st.markdown("<div class='finance-card' style='text-align:center; min-height:380px;'>", unsafe_allow_html=True)
+        st.markdown("<p style='margin:0; font-weight:700; color:#718096; text-transform:uppercase; font-size:0.8rem; letter-spacing:0.05em; text-align:left;'>Ratio Income Used</p>", unsafe_allow_html=True)
         
-        labels = ['Spent - Needs', 'Spent - Wants', 'Spent - Savings', 'Remaining Available']
-        values = [spent_needs, spent_wants, spent_savings, max(0.0, user_income - (spent_needs + spent_wants + spent_savings))]
-        colors = ['#818CF8', '#FDBA74', '#34D399', '#E4E4E7']
-        
-        gauge_fig = go.Figure(go.Pie(
-            values=values,
-            labels=labels,
-            hole=0.7,
-            marker=dict(colors=colors),
+        ratio_fig = go.Figure(go.Pie(
+            values=[total_all_expenses, max(0.0, user_income - total_all_expenses)],
+            labels=['Income Spent', 'Income Available'],
+            hole=0.78,
+            marker=dict(colors=['#8B5CF6', '#E2E8F0']),
             textinfo='none',
             hoverinfo='label+value'
         ))
-        
-        gauge_fig.update_layout(
+        ratio_fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(color="#111114", family="Plus Jakarta Sans"),
+            margin=dict(l=20, r=20, t=20, b=20),
+            showlegend=False,
+            annotations=[dict(text=f"<span style='font-size:2.2rem; font-weight:800; color:#2D3748;'>{used_percentage}%</span><br><span style='font-size:0.75rem; color:#A0AEC0; font-weight:600;'>USED</span>", x=0.5, y=0.5, showarrow=False)]
+        )
+        st.plotly_chart(ratio_fig, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    # =====================================================================
+    # 8. LOWER LEDGER GRID & RADIAL FINANCIAL DISTRIBUTION TRACKING
+    # =====================================================================
+    row2_left, row2_right = st.columns([1.5, 1.5])
+    
+    with row2_left:
+        # Live Transaction Itemized Ledger View
+        st.markdown("<div class='finance-card' style='min-height:380px;'>", unsafe_allow_html=True)
+        st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#2D3748;'>Live Tracking Ledger Log</h4>", unsafe_allow_html=True)
+        if not df_entries.empty:
+            st.dataframe(df_entries, use_container_width=True, hide_index=True)
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("Reset Matrix Ledger Data"):
+                st.session_state['user_expenses'] = []
+                st.rerun()
+        else:
+            st.markdown("<p style='color:#A0AEC0; font-size:0.85rem; padding-top:2rem; text-align:center;'>No outlays logged inside this active monthly workspace session.</p>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+    with row2_right:
+        # Budget Plan Multi-Arc Donut Gauge (Bottom Left style donut tracker from template image)
+        st.markdown("<div class='finance-card' style='min-height:380px;'>", unsafe_allow_html=True)
+        st.markdown("<p style='margin:0 0 0.5rem 0; font-weight:700; color:#718096; text-transform:uppercase; font-size:0.8rem; letter-spacing:0.05em;'>Active Allocation Outflows</p>", unsafe_allow_html=True)
+        
+        donut_fig = go.Figure(go.Pie(
+            values=[spent_needs, spent_wants, spent_savings, max(0.0, user_income - total_all_expenses)],
+            labels=['Needs Outflows', 'Wants Outflows', 'Savings Transferred', 'Remaining Safety Margin'],
+            hole=0.72,
+            marker=dict(colors=['#6366F1', '#F59E0B', '#10B981', '#F1F5F9']),
+            textinfo='none',
+            hoverinfo='label+value'
+        ))
+        donut_fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
             margin=dict(l=10, r=10, t=10, b=10),
             showlegend=True,
-            legend=dict(orientation="h", y=-0.1, x=-0.05)
+            legend=dict(orientation="h", y=-0.1, x=-0.05, font=dict(color="#4A5568", size=10))
         )
-        
-        st.plotly_chart(gauge_fig, use_container_width=True)
+        st.plotly_chart(donut_fig, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
