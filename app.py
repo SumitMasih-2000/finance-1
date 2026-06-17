@@ -15,52 +15,33 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize state configuration for custom settings
-if 'theme_choice' not in st.session_state:
-    st.session_state['theme_choice'] = "Light Mode"
-
-def inject_theme_engine(theme):
-    """Injects high-fidelity stylesheets to toggle canvas variants layout."""
-    if theme == "Dark Mode":
-        bg_canvas = "#0F172A"       
-        card_surface = "#1E293B"    
-        text_primary = "#F8FAFC"    
-        text_secondary = "#94A3B8"  
-        border_color = "#334155"    
-        grid_color = "#334155"
-    else:
-        bg_canvas = "#F3F4F6"       
-        card_surface = "#FFFFFF"    
-        text_primary = "#111114"    
-        text_secondary = "#71717A"  
-        border_color = "#E4E4E7"    
-        grid_color = "#E4E4E7"
-
-    st.markdown(f"""
+def inject_moneyt_template_theme():
+    """Injects high-fidelity stylesheets matching the template light mode."""
+    st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
         
-        .stApp {{
-            background-color: {bg_canvas} !important;
+        /* Master Main Canvas Settings (Clean Gray-White Canvas) */
+        .stApp {
+            background-color: #F3F4F6 !important;
             font-family: 'Plus Jakarta Sans', sans-serif !important;
-            transition: background-color 0.3s ease;
-        }}
+        }
         
-        h1, h2, h3, h4, h5, h6, p, span, label, div, td, th {{
+        h1, h2, h3, h4, h5, h6, p, span, label, div, td, th {
             font-family: 'Plus Jakarta Sans', sans-serif !important;
-        }}
+        }
         
-        /* --- SIDEBAR CLONE DESIGN BLOCK --- */
-        [data-testid="stSidebar"] {{
+        /* --- SIDEBAR DESIGN BLOCK (#111114 Dark Charcoal) --- */
+        [data-testid="stSidebar"] {
             background-color: #111114 !important;
             border-right: 1px solid #1E1E24;
             padding-top: 1rem !important;
-        }}
-        [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
+        }
+        [data-testid="stSidebar"] h2, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
             color: #FFFFFF !important;
-        }}
+        }
         
-        .sidebar-nav-item {{
+        .sidebar-nav-item {
             display: flex;
             align-items: center;
             padding: 0.75rem 1rem;
@@ -69,42 +50,41 @@ def inject_theme_engine(theme):
             color: #A1A1AA;
             font-weight: 500;
             font-size: 0.95rem;
-        }}
-        .sidebar-nav-item.active {{
+        }
+        .sidebar-nav-item.active {
             background-color: #1F1F23;
             color: #FFFFFF;
-        }}
-        .sidebar-section-lbl {{
+        }
+        .sidebar-section-lbl {
             font-size: 0.75rem;
             font-weight: 700;
             color: #52525B;
             letter-spacing: 0.08em;
             margin: 1.5rem 0 0.5rem 1rem;
-        }}
+        }
         
         /* --- DYNAMIC METRIC SURFACES --- */
-        .kpi-wrapper {{
-            background-color: {card_surface};
+        .kpi-wrapper {
+            background-color: #FFFFFF;
             padding: 1.25rem;
             border-radius: 16px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-            border: 1px solid {border_color};
+            border: 1px solid #E4E4E7;
             min-height: 145px;
-            transition: all 0.3s ease;
-        }}
-        .kpi-title {{
+        }
+        .kpi-title {
             font-size: 0.85rem;
-            color: {text_secondary};
+            color: #71717A;
             font-weight: 500;
-        }}
-        .kpi-value {{
+        }
+        .kpi-value {
             font-size: 2.1rem;
             font-weight: 700;
-            color: {text_primary};
+            color: #111114;
             margin-top: 0.4rem;
             letter-spacing: -0.04em;
-        }}
-        .kpi-badge {{
+        }
+        .kpi-badge {
             display: inline-flex;
             align-items: center;
             padding: 0.2rem 0.4rem;
@@ -112,47 +92,49 @@ def inject_theme_engine(theme):
             font-size: 0.72rem;
             font-weight: 600;
             margin-top: 0.6rem;
-        }}
-        .badge-inc {{ background-color: #DCFCE7; color: #16A34A; }}
+        }
+        .badge-inc { background-color: #DCFCE7; color: #16A34A; }
         
-        .border-purple {{ border-top: 4px solid #6366F1; }}
-        .border-orange {{ border-top: 4px solid #F97316; }}
-        .border-teal {{ border-top: 4px solid #06B6D4; }}
-        .border-green {{ border-top: 4px solid #10B981; }}
+        .border-purple { border-top: 4px solid #6366F1; }
+        .border-orange { border-top: 4px solid #F97316; }
+        .border-teal { border-top: 4px solid #06B6D4; }
+        .border-green { border-top: 4px solid #10B981; }
 
         /* --- CLEAN STREAMLINED TABLE SYSTEMS --- */
-        .custom-table {{
+        .custom-table {
             width: 100%;
             border-collapse: collapse;
-            background-color: {card_surface};
+            background-color: #FFFFFF;
             border-radius: 12px;
             overflow: hidden;
-        }}
-        .custom-table th {{
+        }
+        .custom-table th {
             text-align: left;
             padding: 0.75rem 1rem;
-            background-color: {card_surface};
-            color: {text_secondary};
+            background-color: #FAFAFA;
+            color: #71717A;
             font-weight: 600;
             font-size: 0.8rem;
-            border-bottom: 1px solid {border_color};
-        }}
-        .custom-table td {{
+            border-bottom: 1px solid #E4E4E7;
+        }
+        .custom-table td {
             padding: 0.9rem 1rem;
-            color: {text_primary};
+            color: #111114;
             font-size: 0.85rem;
-            border-bottom: 1px solid {border_color};
-        }}
-        .pill-medium {{
+            border-bottom: 1px solid #E4E4E7;
+        }
+        .pill-medium {
             padding: 0.25rem 0.6rem;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 600;
-        }}
+        }
         
-        #MainMenu, footer {{ visibility: hidden; }}
+        #MainMenu, footer { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
+
+inject_moneyt_template_theme()
 
 # =====================================================================
 # 2. RUNTIME COMPLETE FINANCIAL DATA ENGINE
@@ -195,34 +177,16 @@ with st.sidebar:
     st.markdown('<div class="sidebar-nav-item">⏱️ History</div>', unsafe_allow_html=True)
 
 # =====================================================================
-# 4. ENGINE CONTROLS & THEME SWITCHER
+# 4. ENGINE HEADER SUTTE
 # =====================================================================
-header_col, control_col = st.columns([2, 1])
-
-with header_col:
-    st.markdown("<h1 style='font-weight:700; margin-bottom: 0rem;'>Wellcome, Ethan Cole 👋</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='margin-top:0.25rem; margin-bottom:1.5rem;'>360° Financial Visibility Suite Overview Matrix</p>", unsafe_allow_html=True)
-
-with control_col:
-    theme_choice = st.radio(
-        "Canvas Interface Theme",
-        options=["Light Mode", "Dark Mode"],
-        horizontal=True,
-        index=0 if st.session_state['theme_choice'] == "Light Mode" else 1,
-        key="theme_radio_input"
-    )
-    st.session_state['theme_choice'] = theme_choice
-
-inject_theme_engine(st.session_state['theme_choice'])
-is_dark = st.session_state['theme_choice'] == "Dark Mode"
-text_color_code = "#F8FAFC" if is_dark else "#111114"
-grid_color_code = "#334155" if is_dark else "#E4E4E7"
+st.markdown("<h1 style='color:#111114; font-weight:700; margin-bottom: 0rem;'>Wellcome, Ethan Cole 👋</h1>", unsafe_allow_html=True)
+st.markdown("<p style='color:#71717A; margin-top:0.25rem; margin-bottom:1.5rem;'>360° Financial Visibility Suite Overview Matrix</p>", unsafe_allow_html=True)
 
 # =====================================================================
-# 5. DYNAMIC CURRENCY & EXPENSE INTERACTION MATRIX (THEME ADAPTIVE)
+# 5. DYNAMIC CURRENCY & EXPENSE INTERACTION MATRIX
 # =====================================================================
-st.markdown(f"<div style='background-color: {'#1E293B' if is_dark else '#FFFFFF'}; padding:1.25rem; border-radius:14px; border:1px solid {grid_color_code}; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-st.markdown(f"<h4 style='margin:0 0 0.75rem 0; font-weight:700; color:{text_color_code};'>⚙️ Live Financial Control Board</h4>", unsafe_allow_html=True)
+st.markdown("<div style='background-color: #FFFFFF; padding:1.25rem; border-radius:14px; border:1px solid #E4E4E7; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
+st.markdown("<h4 style='margin:0 0 0.75rem 0; font-weight:700; color:#111114;'>⚙️ Live Financial Control Board</h4>", unsafe_allow_html=True)
 
 config_col1, config_col2, config_col3 = st.columns(3)
 
@@ -232,7 +196,7 @@ with config_col1:
         options=["USD ($)", "EUR (€)", "GBP (£)", "JPY (¥)", "INR (₹)"]
     )
     
-    # Currency symbol mapping dictionary
+    # Currency symbol mapping
     symbols = {"USD ($)": "$", "EUR (€)": "€", "GBP (£)": "£", "JPY (¥)": "¥", "INR (₹)": "₹"}
     curr_sym = symbols[currency_choice]
     
@@ -312,13 +276,12 @@ def format_chart_layout(fig):
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color=text_color_code, family="Plus Jakarta Sans"),
+        font=dict(color="#111114", family="Plus Jakarta Sans"),
         margin=dict(l=20, r=20, t=20, b=20),
         hovermode="x unified"
     )
-    if hasattr(fig, 'update_xaxes'):
-        fig.update_xaxes(showgrid=True, gridcolor=grid_color_code, tickfont=dict(color=text_color_code))
-        fig.update_yaxes(showgrid=True, gridcolor=grid_color_code, tickfont=dict(color=text_color_code))
+    fig.update_xaxes(showgrid=True, gridcolor="#E4E4E7", tickfont=dict(color="#71717A"))
+    fig.update_yaxes(showgrid=True, gridcolor="#E4E4E7", tickfont=dict(color="#71717A"))
 
 # =====================================================================
 # 7. CENTRAL ANALYTICS GRID METRICS (ASSETS CURVE & GAUGES)
@@ -327,8 +290,8 @@ body_col_left, body_col_right = st.columns([2, 1])
 
 with body_col_left:
     # Asset Progress Graph Block
-    st.markdown(f"<div style='background-color:{'#1E293B' if is_dark else '#FFFFFF'}; padding:1.5rem; border-radius:16px; border:1px solid {grid_color_code};'>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='margin:0 0 1rem 0; font-weight:700; color:{text_color_code};'>Your Assets Progression Matrix</h4>", unsafe_allow_html=True)
+    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
+    st.markdown("<h4 style='margin:0 0 1rem 0; font-weight:700; color:#111114;'>Your Assets Progression Matrix</h4>", unsafe_allow_html=True)
     
     asset_fig = go.Figure()
     asset_fig.add_trace(go.Scatter(
@@ -343,18 +306,18 @@ with body_col_left:
     ))
     
     format_chart_layout(asset_fig)
-    asset_fig.update_layout(legend=dict(orientation="h", y=1.1, x=0.6, font=dict(color=text_color_code)))
+    asset_fig.update_layout(legend=dict(orientation="h", y=1.1, x=0.6))
     st.plotly_chart(asset_fig, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Custom HTML Table Component Clone (Where and how much was spent)
-    st.markdown(f"<div style='background-color:{'#1E293B' if is_dark else '#FFFFFF'}; padding:1.5rem; border-radius:16px; border:1px solid {grid_color_code};'>", unsafe_allow_html=True)
-    st.markdown(f"<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;'><h4 style='margin:0; font-weight:700; color:{text_color_code};'>Dynamic Expense Breakdown Engine</h4></div>", unsafe_allow_html=True)
+    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7;'>", unsafe_allow_html=True)
+    st.markdown("<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;'><h4 style='margin:0; font-weight:700; color:#111114;'>Dynamic Expense Breakdown Engine</h4></div>", unsafe_allow_html=True)
     
     if not filtered_ledger.empty:
-        table_html = f"<table class='custom-table'><thead><tr style='background-color: {'#334155' if is_dark else '#FAFAFA'};'><th>Recipient</th><th>Category Pool</th><th>Method</th><th>Total Cost ({curr_sym})</th></tr></thead><tbody>"
+        table_html = "<table class='custom-table'><thead><tr style='background-color: #FAFAFA;'><th>Recipient</th><th>Category Pool</th><th>Method</th><th>Total Cost</th></tr></thead><tbody>"
         for _, row in filtered_ledger.iterrows():
             converted_amount = row['BaseAmount'] * curr_rate
             table_html += f"""
@@ -373,8 +336,8 @@ with body_col_left:
 
 with body_col_right:
     # Half Donut / Gauge Arc Transaction View Block
-    st.markdown(f"<div style='background-color:{'#1E293B' if is_dark else '#FFFFFF'}; padding:1.5rem; border-radius:16px; border:1px solid {grid_color_code}; min-height:430px;'>", unsafe_allow_html=True)
-    st.markdown(f"<div style='display:flex; justify-content:space-between;'><span style='font-weight:700; color:{text_color_code};'>Operational Metrics</span></div>", unsafe_allow_html=True)
+    st.markdown("<div style='background-color:#FFFFFF; padding:1.5rem; border-radius:16px; border:1px solid #E4E4E7; min-height:430px;'>", unsafe_allow_html=True)
+    st.markdown("<div style='display:flex; justify-content:space-between;'><span style='font-weight:700; color:#111114;'>Operational Metrics</span></div>", unsafe_allow_html=True)
     
     if not filtered_ledger.empty:
         cat_group = filtered_ledger.groupby('Category')['BaseAmount'].sum().reset_index()
@@ -389,8 +352,8 @@ with body_col_right:
         format_chart_layout(gauge_fig)
         gauge_fig.update_layout(
             showlegend=True, 
-            legend=dict(orientation="h", y=-0.1, x=-0.1, font=dict(color=text_color_code)),
-            annotations=[dict(text=f'{curr_sym}{total_filtered_spend_converted:,.0f}<br><span style="font-size:0.75rem; color:#10B981;">Active Volume</span>', x=0.5, y=0.5, font_size=16, font_weight="bold", showarrow=False, font_color=text_color_code)]
+            legend=dict(orientation="h", y=-0.1, x=-0.1),
+            annotations=[dict(text=f'{curr_sym}{total_filtered_spend_converted:,.0f}<br><span style="font-size:0.75rem; color:#10B981;">Active Volume</span>', x=0.5, y=0.5, font_size=16, font_weight="bold", showarrow=False)]
         )
         st.plotly_chart(gauge_fig, use_container_width=True)
     else:
