@@ -176,6 +176,10 @@ def generate_synthetic_ledger():
     output_frame['Date'] = pd.to_datetime(output_frame['Date'])
     return output_frame
 
+# Persistent Session Safe-State Guardrails
+if 'fin_data' not in st.session_state:
+    st.session_state['fin_data'] = generate_synthetic_ledger()
+
 # =====================================================================
 # 3. ROBUST PURE MATHEMATICAL CLOSED-FORM REGRESSION ENGINE (No Sklearn)
 # =====================================================================
@@ -188,7 +192,6 @@ def execute_pure_linear_forecast(x_data, y_data, steps_forward=6):
     x = np.array(x_data, dtype=float)
     y = np.array(y_data, dtype=float)
     
-    # Calculate slopes and intercepts algebraically: beta = Cov(X,Y)/Var(X)
     x_mean = np.mean(x)
     y_mean = np.mean(y)
     
@@ -202,9 +205,7 @@ def execute_pure_linear_forecast(x_data, y_data, steps_forward=6):
         slope = numerator / denominator
         intercept = y_mean - (slope * x_mean)
         
-    # Extrapolate values linearly
     last_x = x[-1]
-    # Build forward steps assuming monthly average index spacing (~30.4 days ordinal)
     future_x = np.array([last_x + (i * 30.4) for i in range(1, steps_forward + 1)])
     projected_y = intercept + (slope * future_x)
     
@@ -215,7 +216,8 @@ def execute_pure_linear_forecast(x_data, y_data, steps_forward=6):
 # =====================================================================
 st.sidebar.markdown("<h2 style='color:#2563EB; font-weight:700;'>💎 AuraFinance</h2>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='font-size:0.85rem; color:#64748B; margin-top:-10px;'>System Version: 2026.1</p>", unsafe_allow_html=True)
-st.sidebar.divider() #  THIS FIXES IT CLEANLY
+st.sidebar.divider() # Fixed from .hr()
+
 # Navigation Controller Matrix
 dashboard_view = st.sidebar.radio(
     "Control Panels",
@@ -232,11 +234,10 @@ dashboard_view = st.sidebar.radio(
     ]
 )
 
-st.sidebar.hr()
+st.sidebar.divider() # Fixed from .hr()
 st.sidebar.markdown("### 📥 Transaction Document Sync")
 uploaded_document = st.sidebar.file_uploader("Upload External Transaction Ledger", type=['csv', 'xlsx'])
 
-# Session Persistence Architecture
 if uploaded_document is not None:
     try:
         if uploaded_document.name.endswith('.csv'):
@@ -256,7 +257,6 @@ if uploaded_document is not None:
 
 active_ledger = st.session_state['fin_data'].copy()
 
-# Date Windowing Selection Pipelines
 st.sidebar.markdown("### 🗓️ Macro Date Bounds")
 absolute_min = active_ledger['Date'].min().to_pydatetime()
 absolute_max = active_ledger['Date'].max().to_pydatetime()
@@ -268,7 +268,6 @@ if len(selected_bounds) == 2:
 else:
     filtered_ledger = active_ledger
 
-# Global Omni-Search Integration
 search_term = st.sidebar.text_input("🔍 Search Line-Item Descriptors", "")
 if search_term:
     filtered_ledger = filtered_ledger[
@@ -276,7 +275,6 @@ if search_term:
         filtered_ledger['Category'].str.contains(search_term, case=False, na=False)
     ]
 
-# Component UI Blueprint Generator
 def render_kpi_card(title, cash_value, delta_string="", positive_vector=True):
     trend_class = "status-up" if positive_vector else "status-down"
     vector_symbol = "▲" if positive_vector else "▼"
@@ -295,10 +293,8 @@ def render_kpi_card(title, cash_value, delta_string="", positive_vector=True):
 
 # --- SECTION 1: EXECUTIVE SUMMARY ---
 if dashboard_view == "Executive Summary":
-    st.markdown('<div class="main-header">Executive Financial Overview</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">Real-time enterprise balance optimization tracking cross-system operations.</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Executive Financial Overview</h2>', unsafe_allow_html=True)
     
-    # Mathematical aggregation processing
     gross_income = filtered_ledger[filtered_ledger['Transaction Type'] == 'Income']['Amount'].sum()
     gross_expenses = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense']['Amount'].sum()
     gross_investments = filtered_ledger[filtered_ledger['Transaction Type'] == 'Investment']['Amount'].sum()
@@ -317,7 +313,7 @@ if dashboard_view == "Executive Summary":
     with kpi_col4:
         render_kpi_card("Estimated Capital Net Worth", f"${calculated_net_worth:,.2f}", f"Health Index Score: {financial_health_index}/100", financial_health_index > 75)
         
-    st.markdown("---")
+    st.divider() # Fixed from .hr()
     
     chart_col_left, chart_col_right = st.columns([2, 1])
     with chart_col_left:
@@ -375,7 +371,7 @@ if dashboard_view == "Executive Summary":
 
 # --- SECTION 2: EXPENSE INTELLIGENCE ---
 elif dashboard_view == "Expense Intelligence":
-    st.markdown('<div class="main-header">Expense System Diagnostics</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Expense System Diagnostics</h2>', unsafe_allow_html=True)
     expense_superset = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense']
     
     chosen_categories = st.multiselect("Isolate Category Analysis Vectors", options=list(expense_superset['Category'].unique()), default=list(expense_superset['Category'].unique())[:4])
@@ -395,7 +391,7 @@ elif dashboard_view == "Expense Intelligence":
         treemap_graphic.update_layout(margin=dict(l=10, r=10, t=15, b=15))
         st.plotly_chart(treemap_graphic, use_container_width=True)
         
-    st.markdown("---")
+    st.divider() # Fixed from .hr()
     st.markdown("### Temporal System Outflow Density Matrix (Heatmap Grid)")
     expense_superset = expense_superset.copy()
     expense_superset['Day of Week'] = expense_superset['Date'].dt.day_name()
@@ -403,7 +399,7 @@ elif dashboard_view == "Expense Intelligence":
     heatmap_matrix = expense_superset.groupby(['Day of Week', 'Calendar Month'])['Amount'].sum().unstack().fillna(0)
     
     day_sorting_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    heatmap_matrix = heatmap_matrix.reindex(intersection := [d for d in day_sorting_order if d in heatmap_matrix.index])
+    heatmap_matrix = heatmap_matrix.reindex([d for d in day_sorting_order if d in heatmap_matrix.index])
     
     heatmap_graphic = px.imshow(heatmap_matrix, labels=dict(x="Chronological Axis", y="Weekly Footprint Matrix", color="Burn Intensity ($)"), color_continuous_scale='YlOrRd')
     heatmap_graphic.update_layout(margin=dict(l=10, r=10, t=20, b=20), height=380)
@@ -411,7 +407,7 @@ elif dashboard_view == "Expense Intelligence":
 
 # --- SECTION 3: INFLOW CHANNELS ---
 elif dashboard_view == "Inflow Channels":
-    st.markdown('<div class="main-header">Income Analytics & Expansion Engines</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Income Analytics & Expansion Engines</h2>', unsafe_allow_html=True)
     income_superset = filtered_ledger[filtered_ledger['Transaction Type'] == 'Income']
     
     col_inc_left, col_inc_right = st.columns([1, 2])
@@ -429,7 +425,7 @@ elif dashboard_view == "Inflow Channels":
 
 # --- SECTION 4: BUDGET LIMITS ---
 elif dashboard_view == "Budget Limits":
-    st.markdown('<div class="main-header">Operational Threshold Engine Matrix</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Operational Threshold Engine Matrix</h2>', unsafe_allow_html=True)
     
     budget_matrix = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense'].groupby('Category').agg({'Amount':'sum', 'Budget':'first'}).reset_index()
     budget_matrix['Budget'] = budget_matrix['Budget'].apply(lambda val: val if val > 0 else 1350.00)
@@ -454,7 +450,7 @@ elif dashboard_view == "Budget Limits":
 
 # --- SECTION 5: SAVINGS VAULTS ---
 elif dashboard_view == "Savings Vaults":
-    st.markdown('<div class="main-header">Liquid Preservation Vaults & Runways</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Liquid Preservation Vaults & Runways</h2>', unsafe_allow_html=True)
     
     savings_superset = filtered_ledger[filtered_ledger['Transaction Type'] == 'Savings']
     monthly_vault_accumulation = savings_superset.groupby(pd.Grouper(key='Date', freq='ME'))['Amount'].sum().reset_index()
@@ -480,7 +476,7 @@ elif dashboard_view == "Savings Vaults":
 
 # --- SECTION 6: ASSET ALLOCATION ---
 elif dashboard_view == "Asset Allocation":
-    st.markdown('<div class="main-header">Portfolio Capitalization Engine</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Portfolio Capitalization Engine</h2>', unsafe_allow_html=True)
     investment_superset = filtered_ledger[filtered_ledger['Transaction Type'] == 'Investment']
     investment_summary_matrix = investment_superset.groupby('Investment Type')['Amount'].sum().reset_index()
     
@@ -499,7 +495,7 @@ elif dashboard_view == "Asset Allocation":
 
 # --- SECTION 7: TARGET MILESTONES ---
 elif dashboard_view == "Target Milestones":
-    st.markdown('<div class="main-header">Strategic Objective Trackers</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Strategic Objective Trackers</h2>', unsafe_allow_html=True)
     milestone_aggregates = filtered_ledger[filtered_ledger['Transaction Type'] == 'Savings'].groupby('Goal Name')['Amount'].sum().reset_index()
     milestone_aggregates = milestone_aggregates[milestone_aggregates['Goal Name'] != 'None']
     
@@ -512,24 +508,21 @@ elif dashboard_view == "Target Milestones":
         normalized_ratio = min(1.0, milestone_row['Completion Index Ratio'] / 100.0)
         st.progress(normalized_ratio)
         st.markdown(f"Secured Vault Allocation: **${milestone_row['Amount']:,.2f}** / Absolute Goal Benchmark: **${milestone_row['Target Benchmark']:,.2f}** ({milestone_row['Completion Index Ratio']:.1f}% Fulfilled)")
-        st.markdown("---")
+        st.divider() # Fixed from .hr()
 
 # --- SECTION 8: PREDICTIVE AI MATRIX ---
 elif dashboard_view == "Predictive AI Matrix":
-    st.markdown('<div class="main-header">Predictive Mathematical Modelling & AI Analytics</div>', unsafe_allow_html=True)
+    st.markdown('<h2>Predictive Mathematical Modelling & AI Analytics</h2>', unsafe_allow_html=True)
     
     st.markdown("### 📈 Closed-Form Trend Regression Projections (180-Day Structural Runways)")
     monthly_burn_series = filtered_ledger[filtered_ledger['Transaction Type'] == 'Expense'].groupby(pd.Grouper(key='Date', freq='ME'))['Amount'].sum().reset_index()
     
     if len(monthly_burn_series) >= 3:
-        # Construct sequential ordinal data tracking for our pure algebraic equation matrix
         monthly_burn_series['Ordinal_Time_Vector'] = monthly_burn_series['Date'].map(datetime.date.toordinal)
         raw_x = monthly_burn_series['Ordinal_Time_Vector'].values
         raw_y = monthly_burn_series['Amount'].values
         
         future_ordinals, projected_burns = execute_pure_linear_forecast(raw_x, raw_y, steps_forward=6)
-        
-        # Format dates back out of ordinal frameworks cleanly
         extrapolated_timeline = [datetime.date.fromordinal(int(val)) for val in future_ordinals]
         
         forecast_graphic = go.Figure()
@@ -561,13 +554,12 @@ elif dashboard_view == "Predictive AI Matrix":
 
 # --- SECTION 9: CLEARING & EXPORTS ---
 elif dashboard_view == "Clearing & Exports":
-    st.markdown('<div class="main-header">System Extraction Engine</div>', unsafe_allow_html=True)
+    st.markdown('<h2>System Extraction Engine</h2>', unsafe_allow_html=True)
     st.markdown("Isolate, filter, verify, and export internal database ledgers into standards-compliant formats.")
     
     st.markdown("### Live Operational Database Frame View")
     st.dataframe(filtered_ledger, use_container_width=True)
     
-    # In-memory serialization pipeline mechanics
     io_string_buffer = io.StringIO()
     filtered_ledger.to_csv(io_string_buffer, index=False)
     processed_csv_payload = io_string_buffer.getvalue().encode('utf-8')
