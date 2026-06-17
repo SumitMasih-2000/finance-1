@@ -215,8 +215,7 @@ def execute_pure_linear_forecast(x_data, y_data, steps_forward=6):
 # =====================================================================
 st.sidebar.markdown("<h2 style='color:#2563EB; font-weight:700;'>💎 AuraFinance</h2>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='font-size:0.85rem; color:#64748B; margin-top:-10px;'>System Version: 2026.1</p>", unsafe_allow_html=True)
-st.sidebar.hr()
-
+st.sidebar.divider() #  THIS FIXES IT CLEANLY
 # Navigation Controller Matrix
 dashboard_view = st.sidebar.radio(
     "Control Panels",
